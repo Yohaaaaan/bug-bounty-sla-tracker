@@ -140,6 +140,7 @@
                 </div>
             </div>
 
+            
             <!-- Step 3 -->
             <div class="step space-y-8" id="step3">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -166,25 +167,24 @@
                         <p class="text-xs text-gray-400 mt-2">When did you initially submit this report?</p>
                     </div>
                 </div>
-            </div>
-
-            
-            
-            <!-- Step 4: Context & Evidence -->
-            <div class="step space-y-8" id="step4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">7. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
-                    <textarea name="context" rows="3" placeholder="e.g., They silently patched the vulnerability and closed as duplicate..." class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm resize-none"></textarea>
-                </div>
                 
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">8. Expected Bounty <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
-                    <div class="relative">
+                <div class="mt-8 border-t border-gray-100 pt-8">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">7. Expected Bounty</label>
+                    <div class="relative max-w-md">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <span class="text-gray-500 font-medium">$</span>
                         </div>
-                        <input type="number" name="expected_bounty" placeholder="5000" min="0" class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
+                        <input type="number" name="expected_bounty" placeholder="5000" min="0" required class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
                     </div>
+                    <p class="text-xs text-gray-400 mt-2">How much were you expecting? This must be filled.</p>
+                </div>
+            </div>
+
+            <!-- Step 4: Context & Evidence -->
+            <div class="step space-y-8" id="step4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">8. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
+                    <textarea name="context" rows="3" placeholder="e.g., They silently patched the vulnerability and closed as duplicate..." class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm resize-none"></textarea>
                 </div>
 
                 <div>
