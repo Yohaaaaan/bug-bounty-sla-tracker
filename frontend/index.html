@@ -256,5 +256,66 @@
         </div>
     </div>
 
+
+<script>
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return seconds + 's ago';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + 'm ago';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + 'h ago';
+            const days = Math.floor(hours / 24);
+            return days + 'd ago';
+        }
+
+        async function loadGrowthFeatures() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                
+                // Wall of Shame
+                const top3 = data.companyStats.slice(0, 3);
+                let wosHtml = '';
+                top3.forEach((c, i) => {
+                    wosHtml += \`
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center cursor-pointer hover:border-alertRed transition" onclick="document.getElementById('searchInput').value='\${c.company_name}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+                            <span class="text-3xl mb-1">\${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
+                            <h3 class="font-bold text-gray-900">\${c.company_name}</h3>
+                            <span class="text-xs font-black text-alertRed bg-alertRed/10 px-2 py-0.5 rounded-full mt-1">\${c.count} Breaches</span>
+                        </div>
+                    \`;
+                });
+                document.getElementById('wallOfShameList').innerHTML = wosHtml;
+
+                // FOMO Toasts (Latest Reports)
+                const resReports = await fetch('/api/reports');
+                const allReports = await resReports.json();
+                if(allReports.length > 0) {
+                    const recent = allReports.slice(0, 5); // top 5 recent
+                    let fomoIndex = 0;
+                    
+                    setInterval(() => {
+                        const r = recent[fomoIndex];
+                        document.getElementById('fomoCompany').innerText = r.company_name;
+                        document.getElementById('fomoText').innerHTML = \`New <strong>\${r.issue_type}</strong> reported for <span class="font-bold text-alertOrange">\${r.company_name}</span>!\`;
+                        document.getElementById('fomoTime').innerText = formatTimeAgo(r.created_at);
+                        
+                        const toast = document.getElementById('fomoToast');
+                        toast.classList.remove('translate-y-full', 'opacity-0');
+                        
+                        setTimeout(() => {
+                            toast.classList.add('translate-y-full', 'opacity-0');
+                            fomoIndex = (fomoIndex + 1) % recent.length;
+                        }, 5000);
+                        
+                    }, 12000); // Trigger every 12 seconds
+                }
+            } catch(e) { console.error(e); }
+        }
+        document.addEventListener('DOMContentLoaded', loadGrowthFeatures);
+</script>
+
 </body>
 </html>

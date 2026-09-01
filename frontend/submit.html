@@ -234,8 +234,41 @@
         loadCompanies();
 
         // Form submission with PoW
+        
+        const platformMap = {
+            'Web / API': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
+            'Mobile App': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
+            'Hardware / IoT': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
+            'Smart Contract / Blockchain': ['Immunefi', 'Code4rena', 'Sherlock', 'Cantina', 'CodeHawks', 'Salus', 'HackenProof', 'Independent', 'Other']
+        };
+
+        const categorySelect = document.querySelector('select[name="bounty_category"]');
+        const platformInput = document.querySelector('input[name="platform"]');
+        const datalist = document.getElementById('platforms-list');
+
+        categorySelect.addEventListener('change', (e) => {
+            const cat = e.target.value;
+            const valid = platformMap[cat] || [];
+            datalist.innerHTML = valid.map(p => \`<option value="\${p}"></option>\`).join('');
+            
+            // Clear input if current value is now invalid
+            if (platformInput.value && !valid.includes(platformInput.value)) {
+                platformInput.value = '';
+            }
+        });
+        
+        
+
         document.getElementById('reportForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const cat = categorySelect.value;
+            const plat = platformInput.value;
+            if (cat && platformMap[cat] && !platformMap[cat].includes(plat)) {
+                alert('Invalid platform for the selected category. Please select a valid combination.');
+                return;
+            }
+
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
             btn.innerText = 'Verifying PoW...';
