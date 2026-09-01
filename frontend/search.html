@@ -149,27 +149,6 @@
                 `;
             });
             resultsDiv.innerHTML = htmlStr;
-
-
-                resultsDiv.innerHTML += `
-                    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
-                        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 border-b border-gray-100 pb-4">
-                            <div>
-                                <h2 class="text-2xl font-black text-gray-900">${g.name}</h2>
-                                <p class="text-sm text-gray-500 mt-1">Platforms: ${Array.from(g.platforms).join(', ')}</p>
-                            </div>
-                            <div class="mt-3 sm:mt-0 text-right">
-                                <div class="text-3xl font-black text-gray-800">${g.count} <span class="text-sm font-medium text-gray-400">reports</span></div>
-                                <div class="text-xs text-gray-400 mt-1">Last activity: ${dateStr}</div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Issue Breakdown</h4>
-                            <div class="flex flex-wrap">${issuesHtml}</div>
-                        </div>
-                    </div>
-                `;
-            });
         }
 
         

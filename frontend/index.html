@@ -94,6 +94,27 @@
             <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">Anonymous tracking of unresolved SLAs, ghosting, and payment issues. Driven by the community, secured by Proof-of-Work.</p>
         </div>
 
+        
+        <!-- Wall of Shame -->
+        <div class="mb-12 bg-alertRed/5 border border-alertRed/20 p-6 rounded-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-alertRed">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <h2 class="text-xl font-black text-alertRed uppercase tracking-wider mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Wall of Shame (This Week)
+            </h2>
+            <div id="wallOfShameList" class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
+                <div class="text-sm text-gray-500 animate-pulse">Loading worst offenders...</div>
+            </div>
+            <div class="mt-6 text-center">
+                <a href="submit.html" class="inline-flex items-center gap-2 bg-alertRed hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
+                    Submit a New SLA Breach
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </a>
+            </div>
+        </div>
+
         <!-- Search & Grid -->
         <div class="space-y-6 relative z-10">
             <div class="flex flex-col sm:flex-row justify-between items-end sm:items-center border-b border-gray-200 pb-4 mb-8 gap-4">
@@ -140,7 +161,18 @@
                 grid.innerHTML = '';
                 
                 if (reports.length === 0) {
-                    grid.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">No reports found.</div>';
+                    
+                grid.innerHTML = \`
+                    <div class="col-span-full text-center py-12 px-4 bg-white rounded-2xl border border-gray-200 border-dashed">
+                        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">No reports found</h3>
+                        <p class="text-gray-500 mb-6">Have you experienced SLA breaches or been ghosted by this company?</p>
+                        <a href="submit.html" class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-6 rounded-xl transition shadow-lg">
+                            🔴 Be the first to report them!
+                        </a>
+                    </div>
+                \`;
+
                     return;
                 }
 
