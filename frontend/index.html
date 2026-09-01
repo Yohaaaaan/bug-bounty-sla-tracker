@@ -276,6 +276,16 @@
 
 
 <script>
+        
+        function shareWallOfShame() {
+            const cards = document.querySelectorAll('#wallOfShameList h3');
+            if (cards.length === 0) return;
+            const names = Array.from(cards).map((h, i) => `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${h.innerText}`).join('\n');
+            const text = encodeURIComponent(`🚨 This week's Bug Bounty Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on BB SLA Tracker:`);
+            const url = encodeURIComponent(window.location.origin);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+
         function formatTimeAgo(dateString) {
             const date = new Date(dateString);
             const seconds = Math.floor((new Date() - date) / 1000);
