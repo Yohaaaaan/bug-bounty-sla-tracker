@@ -347,5 +347,81 @@
         document.addEventListener('DOMContentLoaded', loadGrowthFeatures);
 </script>
 
+
+    <!-- Community Manifesto Modal -->
+    <div id="manifestoModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeManifesto()"></div>
+        
+        <!-- Modal Content -->
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative z-10 overflow-hidden transform transition-all translate-y-4 opacity-0" id="manifestoContent">
+            <div class="h-2 w-full bg-gradient-to-r from-alertOrange to-alertRed"></div>
+            <div class="p-8 sm:p-10">
+                <div class="w-14 h-14 bg-alertRed/10 rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-alertRed" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                
+                <h2 class="text-2xl font-black text-gray-900 mb-4 tracking-tight">Welcome to the Community.</h2>
+                
+                <div class="space-y-4 text-gray-600 text-sm leading-relaxed mb-8">
+                    <p>
+                        This platform was built by hackers, for hackers. We have <strong>no corporate sponsors</strong>, no platform affiliations, and zero censorship.
+                    </p>
+                    <p>
+                        Our only weapon against ghosting, unjustified downgrades, and endless payout delays is <strong>public visibility</strong>.
+                    </p>
+                    <p class="font-medium text-gray-900 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        This ledger only works if we share it. The more eyes we have, the faster platforms resolve our reports.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <a target="_blank" href="https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20I%20just%20joined%20the%20Resistance.%0A%0AHackers%20are%20finally%20tracking%20unresolved%20Bug%20Bounty%20SLAs%2C%20ghosting%2C%20and%20payment%20delays%20on%20a%20public%20ledger.%0A%0AJoin%20the%20community%20and%20report%20your%20breaches%20here%3A&url=https%3A%2F%2Fbb-reports.duckdns.org" onclick="closeManifesto()" class="w-full bg-black hover:bg-gray-800 text-white font-bold py-3.5 px-4 rounded-xl transition flex justify-center items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Acknowledge & Share on X
+                    </a>
+                    <button onclick="closeManifesto()" class="w-full bg-transparent hover:bg-gray-50 text-gray-500 font-medium py-3 px-4 rounded-xl transition">
+                        I understand, continue to site
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkManifesto() {
+            if (!localStorage.getItem('manifesto_acknowledged')) {
+                const modal = document.getElementById('manifestoModal');
+                const content = document.getElementById('manifestoContent');
+                
+                // Small delay for dramatic effect after page load
+                setTimeout(() => {
+                    modal.classList.remove('hidden');
+                    // Trigger reflow
+                    void modal.offsetWidth;
+                    content.classList.remove('translate-y-4', 'opacity-0');
+                    content.classList.add('translate-y-0', 'opacity-100');
+                }, 800);
+            }
+        }
+
+        function closeManifesto() {
+            localStorage.setItem('manifesto_acknowledged', 'true');
+            const modal = document.getElementById('manifestoModal');
+            const content = document.getElementById('manifestoContent');
+            
+            content.classList.remove('translate-y-0', 'opacity-100');
+            content.classList.add('translate-y-4', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        
+
+        document.addEventListener('DOMContentLoaded', checkManifesto);
+    </script>
+
 </body>
 </html>
