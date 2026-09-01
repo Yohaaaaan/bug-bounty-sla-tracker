@@ -113,10 +113,10 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </a>
 
-                <button onclick="shareWallOfShame()" class="inline-flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
+                <a id="shareWosBtn" target="_blank" href="#" class="inline-flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
                     Share on X (Twitter)
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </button>
+                </a>
 
             </div>
         </div>
@@ -277,16 +277,7 @@
 
 <script>
         
-        function shareWallOfShame() {
-            const cards = document.querySelectorAll('#wallOfShameList h3');
-            if (cards.length === 0) return;
-            const names = Array.from(cards).map((h, i) => `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${h.innerText}`).join('\n');
-            const text = encodeURIComponent(`🚨 This week's Bug Bounty Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on BB SLA Tracker:`);
-            const url = encodeURIComponent(window.location.origin);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-        }
-
-        function formatTimeAgo(dateString) {
+                function formatTimeAgo(dateString) {
             const date = new Date(dateString);
             const seconds = Math.floor((new Date() - date) / 1000);
             if (seconds < 60) return seconds + 's ago';
@@ -316,6 +307,13 @@
                     `;
                 });
                 document.getElementById('wallOfShameList').innerHTML = wosHtml;
+
+                // Generate Share Link
+                const names = top3.map((c, i) => `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${c.company_name}`).join('\n');
+                const text = encodeURIComponent(`🚨 This week's Bug Bounty Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on BB SLA Tracker:`);
+                const url = encodeURIComponent(window.location.origin);
+                document.getElementById('shareWosBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+
 
                 // FOMO Toasts (Latest Reports)
                 const resReports = await fetch('/api/reports');
