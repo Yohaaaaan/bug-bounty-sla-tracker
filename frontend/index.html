@@ -380,7 +380,7 @@
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         Acknowledge & Share on X
                     </a>
-                    <button onclick="closeManifesto()" class="w-full bg-transparent hover:bg-gray-50 text-gray-500 font-medium py-3 px-4 rounded-xl transition">
+                    <button type="button" onclick="closeManifesto()" class="w-full bg-transparent hover:bg-gray-50 text-gray-500 font-medium py-3 px-4 rounded-xl transition">
                         I understand, continue to site
                     </button>
                 </div>
@@ -406,15 +406,21 @@
         }
 
         function closeManifesto() {
-            localStorage.setItem('manifesto_acknowledged', 'true');
+            try {
+                localStorage.setItem('manifesto_acknowledged', 'true');
+            } catch (e) {
+                console.warn('Could not save to localStorage', e);
+            }
             const modal = document.getElementById('manifestoModal');
             const content = document.getElementById('manifestoContent');
             
-            content.classList.remove('translate-y-0', 'opacity-100');
-            content.classList.add('translate-y-4', 'opacity-0');
+            if (content) {
+                content.classList.remove('translate-y-0', 'opacity-100');
+                content.classList.add('translate-y-4', 'opacity-0');
+            }
             
             setTimeout(() => {
-                modal.classList.add('hidden');
+                if (modal) modal.classList.add('hidden');
             }, 300);
         }
 
