@@ -71,7 +71,7 @@
                     <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-alertOrange to-red-500 flex items-center justify-center shadow-md">
                         <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     </div>
-                    <span class="font-bold text-lg tracking-wide text-gray-900">BB SLA Tracker</span>
+                    <span class="font-bold text-lg tracking-wide text-gray-900">Bug Bounty SLA Tracker</span>
                 </div>
                 
 <div class="flex items-center space-x-6">
@@ -245,7 +245,7 @@
 
     <footer class="border-t border-gray-200 bg-white py-6 mt-10">
         <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">BB SLA Tracker &copy; 2026. Community Driven.</p>
+            <p class="text-gray-500 text-sm">Bug Bounty SLA Tracker &copy; 2026. Community Driven.</p>
             <div class="mt-2 flex justify-center items-center gap-4">
                 <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
                 <span class="text-gray-300">|</span>
@@ -310,7 +310,7 @@
 
                 // Generate Share Link
                 const names = top3.map((c, i) => `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${c.company_name}`).join('\n');
-                const text = encodeURIComponent(`🚨 This week's Bug Bounty Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on BB SLA Tracker:`);
+                const text = encodeURIComponent(`🚨 This week's Bug Bounty Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on Bug Bounty SLA Tracker:`);
                 const url = encodeURIComponent(window.location.origin);
                 document.getElementById('shareWosBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 
