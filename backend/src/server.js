@@ -91,7 +91,7 @@ const escapeHTML = (str) => {
 };
 
 // Endpoint pour soumettre un rapport
-app.post('/api/ledger', (req, res) => {
+app.post('/api/ledger', upload.single('proof_image'), (req, res) => {
     const { 
         website_url, pow_challenge, pow_nonce 
     } = req.body;
