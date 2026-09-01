@@ -276,7 +276,7 @@
                 const data = await res.json();
                 
                 // Wall of Shame
-                const top3 = data.companyStats.slice(0, 3);
+                const top3 = data.weeklyCompanyStats && data.weeklyCompanyStats.length > 0 ? data.weeklyCompanyStats : data.companyStats.slice(0, 3);
                 let wosHtml = '';
                 top3.forEach((c, i) => {
                     wosHtml += `

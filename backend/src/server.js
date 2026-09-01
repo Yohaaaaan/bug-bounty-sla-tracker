@@ -209,11 +209,14 @@ app.get('/api/stats', (req, res) => {
         db.all(`SELECT company_name, COUNT(*) as count FROM reports WHERE is_hidden=0 GROUP BY company_name ORDER BY count DESC LIMIT 10`, (err, companyStats) => {
             db.all(`SELECT platform, COUNT(*) as count FROM reports WHERE is_hidden=0 GROUP BY platform ORDER BY count DESC`, (err, platformStats) => {
                 db.all(`SELECT issue_type, COUNT(*) as count FROM reports WHERE is_hidden=0 GROUP BY issue_type ORDER BY count DESC`, (err, issueStats) => {
-                    res.json({
-                        totals: totals[0],
-                        companyStats,
-                        platformStats,
-                        issueStats
+                    db.all(`SELECT company_name, COUNT(*) as count FROM reports WHERE is_hidden=0 AND created_at >= datetime('now', '-7 days') GROUP BY company_name ORDER BY count DESC LIMIT 3`, (err, weeklyCompanyStats) => {
+                        res.json({
+                            totals: totals[0],
+                            companyStats,
+                            platformStats,
+                            issueStats,
+                            weeklyCompanyStats: weeklyCompanyStats || []
+                        });
                     });
                 });
             });
