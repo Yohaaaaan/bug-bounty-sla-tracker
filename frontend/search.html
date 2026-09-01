@@ -149,10 +149,10 @@
                                 Share & Embed
                             </h4>
                             <div class="flex flex-col gap-2">
-                                <button onclick="shareToX('${encodeURIComponent(g.name)}', ${g.count})" class="w-full bg-black hover:bg-gray-800 text-white py-2 px-3 rounded-lg text-xs font-medium transition flex justify-center items-center gap-2 shadow-sm">
+                                <a target="_blank" href="https://twitter.com/intent/tweet?text=🚨%20${encodeURIComponent(g.name)}%20has%20${g.count}%20unresolved%20SLA%20breaches%2Fghosting%20reports!%0A%0ACheck%20the%20proofs%20on%20Bug%20Bounty%20SLA%20Tracker:&url=${encodeURIComponent(window.location.origin + '/search.html?q=' + encodeURIComponent(g.name))}" class="w-full bg-black hover:bg-gray-800 text-white py-2 px-3 rounded-lg text-xs font-medium transition flex justify-center items-center gap-2 shadow-sm">
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                                     Share on X
-                                </button>
+                                </a>
                                 
                             </div>
                         </div>
@@ -163,13 +163,7 @@
         }
 
         
-        function shareToX(company, count) {
-            const dec = decodeURIComponent(company);
-            const text = encodeURIComponent(`🚨 ${dec} has ${count} unresolved SLA breaches/ghosting reports!\n\nCheck the proofs on BB SLA Tracker:`);
-            const url = encodeURIComponent(window.location.origin + '/search.html?q=' + encodeURIComponent(dec));
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-        }
-        
+                
         
         document.getElementById('masterSearch').addEventListener('input', (e) => {
             renderAggregated(e.target.value);

@@ -144,13 +144,7 @@
             fetchStats(); // re-render
         }
         
-        function shareToX(company, count, event) {
-            event.stopPropagation();
-            const text = encodeURIComponent(`🚨 ${company} has ${count} unresolved SLA breaches/ghosting reports!\n\nCheck the proofs on BB SLA Tracker:`);
-            const url = encodeURIComponent(`https://bb-reports.duckdns.org/search.html?q=${encodeURIComponent(company)}`);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-        }
-
+        
         async function fetchStats() {
             try {
                 const res = await fetch('/api/stats');
