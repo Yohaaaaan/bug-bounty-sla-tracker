@@ -153,10 +153,7 @@
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                                     Share on X
                                 </button>
-                                <button onclick="copyBadge('${encodeURIComponent(g.name)}', ${g.count})" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium transition flex justify-center items-center gap-2 shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                    Copy Badge
-                                </button>
+                                
                             </div>
                         </div>
                     </div>
@@ -173,15 +170,7 @@
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
         }
         
-        function copyBadge(company, count) {
-            const dec = decodeURIComponent(company);
-            const badgeUrl = `https://img.shields.io/badge/SLA_Breaches-${count}-red?style=flat-square`;
-            const md = `[![BB SLA Tracker](${badgeUrl})](${window.location.origin}/search.html?q=${encodeURIComponent(dec)})`;
-            navigator.clipboard.writeText(md).then(() => {
-                alert('Markdown badge copied to clipboard! Paste it in your GitHub readmes or Immunefi reports.');
-            });
-        }
-
+        
         document.getElementById('masterSearch').addEventListener('input', (e) => {
             renderAggregated(e.target.value);
         });
