@@ -1,16 +1,30 @@
+process.env.NODE_ENV = 'production';
 require('dotenv').config({ path: __dirname + '/../../.env' });
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const db = require('./database');
 
 const app = express();
-app.set('trust proxy', 1);
+app.set('trust proxy', 'loopback');
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.tailwindcss.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            connectSrc: ["'self'"]
+        }
+    }
+}));
+// Removing global CORS to restrict to same-origin.
+
 app.use(express.json());
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../../frontend')));
@@ -32,7 +46,7 @@ function verifyPoW(challenge, nonce, difficulty = 4) {
 // Endpoint pour obtenir un challenge PoW
 app.get('/api/pow-challenge', (req, res) => {
     const challenge = crypto.randomBytes(16).toString('hex');
-    const expiresAt = new Date(Date.now() + 5 * 60000).toISOString(); // Expire dans 5 min
+    const expiresAt = Date.now() + 5 * 60000; // Expire dans 5 min
 
     db.run(`INSERT INTO pow_challenges (challenge, expires_at) VALUES (?, ?)`, [challenge, expiresAt], (err) => {
         if (err) return res.status(500).json({ error: 'Database error' });
@@ -63,7 +77,7 @@ app.post('/api/reports', (req, res) => {
     // Honeypot
     if (website_url) return res.status(200).json({ message: 'Rapport soumis avec succès (bot détecté).' });
 
-    if (!pow_challenge || !pow_nonce) return res.status(400).json({ error: 'Preuve de travail (PoW) manquante.' });
+    if (!pow_challenge || pow_nonce == null) return res.status(400).json({ error: 'Preuve de travail (PoW) manquante.' });
 
     // Sanitize and limit inputs against XSS and buffer overflow
     const bounty_category = escapeHTML(req.body.bounty_category);
@@ -91,11 +105,13 @@ app.post('/api/reports', (req, res) => {
         return res.status(400).json({ error: 'Resolution Delay requires at least 30 days.' });
     }
 
-    db.get(`SELECT * FROM pow_challenges WHERE challenge = ? AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP`, [pow_challenge], (err, row) => {
-        if (err || !row) return res.status(400).json({ error: 'Challenge PoW invalide ou expiré.' });
-        if (!verifyPoW(pow_challenge, pow_nonce)) return res.status(400).json({ error: 'Preuve de travail incorrecte.' });
-
-        db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ?`, [pow_challenge]);
+    db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ? AND is_used = 0 AND CAST(expires_at AS INTEGER) > ?`, [pow_challenge, Date.now()], function(err) {
+        if (err || this.changes === 0) return res.status(400).json({ error: 'Challenge PoW invalide, expiré ou rejoué.' });
+        
+        const difficulty = 4;
+        const hash = crypto.createHash('sha256').update(pow_challenge + String(pow_nonce)).digest('hex');
+        if (!hash.startsWith('0'.repeat(difficulty))) return res.status(400).json({ error: 'PoW incorrect.' });
+    
 
         const id = uuidv4();
         const query = `
@@ -114,17 +130,16 @@ app.post('/api/reports', (req, res) => {
 app.post('/api/contact', (req, res) => {
     const { name, company, email, content, pow_challenge, pow_nonce } = req.body;
     
-    if (!pow_challenge || !pow_nonce) return res.status(400).json({ error: 'PoW manquant.' });
+    if (!pow_challenge || pow_nonce == null) return res.status(400).json({ error: 'PoW manquant.' });
     if (!name || !email || !content) return res.status(400).json({ error: 'Champs obligatoires manquants.' });
 
-    db.get(`SELECT * FROM pow_challenges WHERE challenge = ? AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP`, [pow_challenge], (err, row) => {
-        if (err || !row) return res.status(400).json({ error: 'Challenge invalide.' });
+    db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ? AND is_used = 0 AND CAST(expires_at AS INTEGER) > ?`, [pow_challenge, Date.now()], function(err) {
+        if (err || this.changes === 0) return res.status(400).json({ error: 'Challenge PoW invalide, expiré ou rejoué.' });
         
         const difficulty = 4;
-        const hash = crypto.createHash('sha256').update(pow_challenge + pow_nonce).digest('hex');
+        const hash = crypto.createHash('sha256').update(pow_challenge + String(pow_nonce)).digest('hex');
         if (!hash.startsWith('0'.repeat(difficulty))) return res.status(400).json({ error: 'PoW incorrect.' });
-
-        db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ?`, [pow_challenge]);
+    
 
         const id = uuidv4();
         db.run(`INSERT INTO messages (id, name, company, email, content) VALUES (?, ?, ?, ?, ?)`, 
@@ -212,22 +227,20 @@ app.post('/api/reports/:id/flag', (req, res) => {
     const { id } = req.params;
     const { pow_challenge, pow_nonce } = req.body;
 
-    if (!pow_challenge || !pow_nonce) return res.status(400).json({ error: 'PoW manquant.' });
+    if (!pow_challenge || pow_nonce == null) return res.status(400).json({ error: 'PoW manquant.' });
 
-    db.get(`SELECT * FROM pow_challenges WHERE challenge = ? AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP`, [pow_challenge], (err, row) => {
-        if (err || !row) return res.status(400).json({ error: 'Challenge invalide.' });
+    db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ? AND is_used = 0 AND CAST(expires_at AS INTEGER) > ?`, [pow_challenge, Date.now()], function(err) {
+        if (err || this.changes === 0) return res.status(400).json({ error: 'Challenge PoW invalide, expiré ou rejoué.' });
         
         const difficulty = parseInt(process.env.POW_DIFFICULTY_FLAG || 4);
-        const hash = crypto.createHash('sha256').update(pow_challenge + pow_nonce).digest('hex');
+        const hash = crypto.createHash('sha256').update(pow_challenge + String(pow_nonce)).digest('hex');
         if (!hash.startsWith('0'.repeat(difficulty))) return res.status(400).json({ error: 'PoW incorrect.' });
-
-        db.run(`UPDATE pow_challenges SET is_used = 1 WHERE challenge = ?`, [pow_challenge]);
+    
 
         db.run(`UPDATE reports SET flag_count = flag_count + 1 WHERE id = ?`, [id], function(err) {
             if (err) return res.status(500).json({ error: 'Erreur.' });
             
-            const threshold = parseInt(process.env.FLAG_HIDE_THRESHOLD || 5);
-            db.run(`UPDATE reports SET is_hidden = 1 WHERE id = ? AND flag_count >= ?`, [id, threshold]);
+            // Auto-hide deactivated pending authenticated moderation
             
             res.json({ message: 'Signalement enregistré.' });
         });
@@ -238,13 +251,14 @@ app.post('/api/reports/:id/flag', (req, res) => {
 // Privacy-respecting Analytics Ping
 app.post('/api/ping', (req, res) => {
     const { path } = req.body;
-    if (!path) return res.status(400).send();
-    // Daily salt for anonymity (GDPR compliant, no cross-day tracking of the same IP)
+    if (!path || typeof path !== 'string' || !path.startsWith('/') || path.length > 100) return res.status(400).send();
+    const cleanPath = path.replace(/[^a-zA-Z0-9/.-]/g, ''); // Validate path against XSS
+    const secret = process.env.ANALYTICS_SECRET || 'fallback-secret';
+    const ip = req.ip || req.socket.remoteAddress;
     const salt = new Date().toISOString().slice(0, 10); 
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const visitor_hash = crypto.createHash('sha256').update(ip + salt).digest('hex').substring(0, 16);
+    const visitor_hash = crypto.createHmac('sha256', secret).update(ip + salt).digest('hex').substring(0, 16);
     
-    db.run('INSERT INTO analytics (path, visitor_hash) VALUES (?, ?)', [path, visitor_hash], (err) => {
+    db.run('INSERT INTO analytics (path, visitor_hash) VALUES (?, ?)', [cleanPath, visitor_hash], (err) => {
         if (err) console.error(err);
         res.status(200).send();
     });

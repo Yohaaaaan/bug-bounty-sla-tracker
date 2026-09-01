@@ -150,7 +150,7 @@
                     if (index > 6) bgClass = 'bg-yellow-400';
 
                     html += `
-                    <div class="group relative cursor-pointer" onclick="toggleCompanyReports('${c.company_name.replace(/'/g, "\\'")}')">
+                    <div class="group relative cursor-pointer" onclick="toggleCompanyReports(decodeURIComponent('${encodeURIComponent(c.company_name)}'))">
                         <div class="flex justify-between items-center text-sm mb-2">
                             <span class="font-bold text-gray-900 group-hover:text-blue-600 transition flex items-center gap-2">
                                 <span class="w-4 inline-block text-gray-400 text-right">${index + 1}.</span> 
@@ -250,13 +250,30 @@
                     tbody.innerHTML = '<tr><td colspan="3" class="py-2 text-center text-gray-400">No data</td></tr>';
                     return;
                 }
-                tbody.innerHTML = data.map(r => `
-                    <tr class="border-b border-gray-50 hover:bg-gray-50/50">
-                        <td class="py-2 font-medium text-gray-800">${r.path}</td>
-                        <td class="py-2 text-gray-600">${r.views}</td>
-                        <td class="py-2 text-blue-600 font-bold">${r.uniques}</td>
-                    </tr>
-                `).join('');
+                
+                tbody.innerHTML = '';
+                data.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-50 hover:bg-gray-50';
+                    
+                    const tdPath = document.createElement('td');
+                    tdPath.className = 'py-3 font-medium text-gray-800';
+                    tdPath.textContent = r.path; // SAFE
+                    
+                    const tdViews = document.createElement('td');
+                    tdViews.className = 'py-3 text-gray-600';
+                    tdViews.textContent = r.views; // SAFE
+                    
+                    const tdUniques = document.createElement('td');
+                    tdUniques.className = 'py-3 text-gray-900 font-bold text-right';
+                    tdUniques.textContent = r.uniques; // SAFE
+                    
+                    tr.appendChild(tdPath);
+                    tr.appendChild(tdViews);
+                    tr.appendChild(tdUniques);
+                    tbody.appendChild(tr);
+                });
+
             } catch (error) {
                 console.error("Error loading analytics", error);
             }

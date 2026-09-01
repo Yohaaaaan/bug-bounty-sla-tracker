@@ -1,0 +1,7 @@
+.git
+.env*
+backend/.env*
+backend/db/
+**/*.sqlite*
+**/*.log
+node_modules/

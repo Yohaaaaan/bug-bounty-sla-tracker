@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Bounty SLA Tracker</title>
-    <script src="https://cdn.tailwindcss.com">
-        async function flagReport(id) {
+    <script src="https://cdn.tailwindcss.com"></script>
+<script>
+    async function flagReport(id) {
             if(!confirm('Report this as spam/fake? Your browser will perform a PoW calculation.')) return;
             try {
                 const resChallenge = await fetch('/api/pow-challenge');
@@ -58,6 +59,7 @@
     
     <style>body { font-family: 'Inter', sans-serif; }</style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script></script>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
     
