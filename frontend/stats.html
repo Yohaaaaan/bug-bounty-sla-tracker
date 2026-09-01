@@ -130,6 +130,27 @@
             return 'text-gray-600 bg-white/5 border-gray-200';
         }
 
+        
+        // Watchlist Logic
+        function toggleWatchlist(company, event) {
+            event.stopPropagation();
+            let wl = JSON.parse(localStorage.getItem('slaWatchlist') || '[]');
+            if(wl.includes(company)) {
+                wl = wl.filter(c => c !== company);
+            } else {
+                wl.push(company);
+            }
+            localStorage.setItem('slaWatchlist', JSON.stringify(wl));
+            fetchStats(); // re-render
+        }
+        
+        function shareToX(company, count, event) {
+            event.stopPropagation();
+            const text = encodeURIComponent(`🚨 ${company} has ${count} unresolved SLA breaches/ghosting reports!\n\nCheck the proofs on BB SLA Tracker:`);
+            const url = encodeURIComponent(`https://bb-reports.duckdns.org/search.html?q=${encodeURIComponent(company)}`);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+
         async function fetchStats() {
             try {
                 const res = await fetch('/api/stats');
