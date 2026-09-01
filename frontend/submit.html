@@ -65,7 +65,7 @@
                     <p id="stepDesc" class="text-sm text-gray-500 mt-1">Identify the company and platform.</p>
                 </div>
                 <div class="text-sm font-bold text-alertOrange">
-                    <span id="stepIndicator">1</span> / 3
+                    <span id="stepIndicator">1</span> / 4
                 </div>
             </div>
 
@@ -170,8 +170,8 @@
 
             
             
-            <!-- Step 3: Context & Evidence -->
-            <div class="step space-y-8" id="step3">
+            <!-- Step 4: Context & Evidence -->
+            <div class="step space-y-8" id="step4">
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">7. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
                     <textarea name="context" rows="3" placeholder="e.g., They silently patched the vulnerability and closed as duplicate..." class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm resize-none"></textarea>
@@ -196,7 +196,7 @@
 
             <!-- Step 4 (Success) -->
 
-            <div class="step space-y-8 text-center py-8" id="step4">
+            <div class="step space-y-8 text-center py-8" id="step5">
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
@@ -236,14 +236,14 @@
     <script>
         
         let currentStep = 1;
-        const totalSteps = 3;
+        const totalSteps = 4;
         const form = document.getElementById('reportForm');
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
         const submitBtn = document.getElementById('submitBtn');
         
-        const titles = ["Step 1: The Target", "Step 2: The Issue", "Step 3: Context & Evidence"];
-        const descs = ["Identify the company and platform.", "What exactly went wrong?", "Provide context and proofs."];
+        const titles = ["Step 1: The Target", "Step 2: The Issue", "Step 3: The Impact", "Step 4: Context & Evidence"];
+        const descs = ["Identify the company and platform.", "What exactly went wrong?", "Rate the severity and timeline.", "Provide context and proofs."];
 
         function showStep(step) {
             
@@ -264,7 +264,7 @@
                 prevBtn.classList.add('hidden');
                 nextBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
-            } else if (step === 3) {
+            } else if (step === 4) {
                 prevBtn.classList.remove('hidden');
                 nextBtn.classList.add('hidden');
                 submitBtn.classList.remove('hidden');
@@ -459,8 +459,8 @@
                     document.getElementById('nextBtn').style.display = 'none';
                     document.getElementById('submitBtn').style.display = 'none';
                     
-                    document.getElementById('step3').classList.remove('active'); // Just in case
-                    document.getElementById('step4').classList.add('active');
+                    document.getElementById('step4').classList.remove('active'); // Just in case
+                    document.getElementById('step5').classList.add('active');
                     
                 } else {
 
