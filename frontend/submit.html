@@ -300,7 +300,7 @@
         categorySelect.addEventListener('change', (e) => {
             const cat = e.target.value;
             const valid = platformMap[cat] || [];
-            datalist.innerHTML = valid.map(p => \`<option value="\${p}"></option>\`).join('');
+            datalist.innerHTML = valid.map(p => `<option value="${p}"></option>`).join('');
             
             // Clear input if current value is now invalid
             if (platformInput.value && !valid.includes(platformInput.value)) {
