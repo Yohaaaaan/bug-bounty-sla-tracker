@@ -110,6 +110,36 @@
                 </div>
             </div>
 
+            
+            <!-- Step 2 -->
+            <div class="step space-y-8" id="step2">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
+                            <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
+                            <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                            <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                            <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                            <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                            <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <!-- Step 3 -->
             <div class="step space-y-8" id="step3">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
