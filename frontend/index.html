@@ -113,9 +113,9 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </a>
 
-                <button onclick="shareWallOfShame()" class="inline-flex items-center gap-2 bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
+                <button onclick="shareWallOfShame()" class="inline-flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
                     Share on X (Twitter)
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </button>
 
             </div>
@@ -300,7 +300,11 @@
                 const resReports = await fetch('/api/reports');
                 const allReports = await resReports.json();
                 if(allReports.length > 0) {
-                    const recent = allReports.slice(0, 5); // top 5 recent
+                    
+                    const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+                    let recent = allReports.filter(r => new Date(r.created_at) > seventyTwoHoursAgo).slice(0, 5);
+                    if (recent.length === 0) recent = allReports.slice(0, 2); // fallback if none are recent
+        
                     let fomoIndex = 0;
                     
                     setInterval(() => {
@@ -317,7 +321,7 @@
                             fomoIndex = (fomoIndex + 1) % recent.length;
                         }, 5000);
                         
-                    }, 12000); // Trigger every 12 seconds
+                    }, 60000); // Trigger every 60 seconds
                 }
             } catch(e) { console.error(e); }
         }
