@@ -333,8 +333,8 @@
         // Form submission with PoW
         
         const platformMap = {
-            'Web / API': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
-            'Mobile App': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
+            'Web / API': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Immunefi', 'HackenProof', 'Independent', 'Other'],
+            'Mobile App': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Immunefi', 'HackenProof', 'Independent', 'Other'],
             'Hardware / IoT': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
             'Smart Contract / Blockchain': ['Immunefi', 'Code4rena', 'Sherlock', 'Cantina', 'CodeHawks', 'Salus', 'HackenProof', 'Independent', 'Other']
         };
@@ -443,7 +443,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                alert('Connection error. Is the backend running?');
+                alert('An error occurred: ' + err.message + '. Please check the console or ensure your adblocker isn\'t blocking required scripts.');
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'Submit Report';
