@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+const multer = require('multer');
 const db = require('./database');
 
 const app = express();
@@ -28,6 +29,27 @@ app.use(helmet({
 app.use(express.json());
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../../frontend')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../uploads/'))
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext)
+    }
+});
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) cb(null, true);
+        else cb(new Error('Only images are allowed'));
+    }
+});
+
 
 // Rate limiting strict par IP
 const limiter = rateLimit({
@@ -114,11 +136,18 @@ app.post('/api/ledger', (req, res) => {
     
 
         const id = uuidv4();
+        let context = req.body.context ? escapeHTML(req.body.context) : null;
+        let expected_bounty = req.body.expected_bounty ? parseInt(req.body.expected_bounty) : null;
+        let proof_url = null;
+        if (req.file) {
+            proof_url = '/uploads/' + req.file.filename;
+        }
+
         const query = `
-            INSERT INTO reports (id, bounty_category, platform, company_name, issue_type, severity, submission_date)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO reports (id, bounty_category, platform, company_name, issue_type, severity, submission_date, context, proof_url, expected_bounty)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        db.run(query, [id, bounty_category, platform, company_name, issue_type, severity, submission_date], function(err) {
+        db.run(query, [id, bounty_category, platform, company_name, issue_type, severity, submission_date, context, proof_url, expected_bounty], function(err) {
             if (err) return res.status(500).json({ error: 'Erreur.' });
             res.status(201).json({ message: 'Success', id });
         });

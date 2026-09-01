@@ -50,7 +50,7 @@
         
         <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gray-100">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-alertOrange to-alertRed progress-bar-fill" style="width: 33%;"></div>
+                <div id="progressBar" class="h-full bg-gradient-to-r from-alertOrange to-alertRed progress-bar-fill" style="width: 25%;"></div>
             </div>
             
             <div class="hidden" aria-hidden="true">
@@ -169,7 +169,33 @@
             </div>
 
             
+            
+            <!-- Step 3: Context & Evidence -->
+            <div class="step space-y-8" id="step3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">7. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
+                    <textarea name="context" rows="3" placeholder="e.g., They silently patched the vulnerability and closed as duplicate..." class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm resize-none"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">8. Expected Bounty <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 font-medium">$</span>
+                        </div>
+                        <input type="number" name="expected_bounty" placeholder="5000" min="0" class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">9. Proof Image <span class="text-xs font-normal text-gray-400 ml-2">(Optional but recommended)</span></label>
+                    <input type="file" name="proof_image" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-900 focus:outline-none focus:border-alertOrange shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
+                    <p class="text-xs text-gray-400 mt-2">Upload a screenshot of the report, timeline, or messages. "Pics or it didn't happen."</p>
+                </div>
+            </div>
+
             <!-- Step 4 (Success) -->
+
             <div class="step space-y-8 text-center py-8" id="step4">
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -210,7 +236,7 @@
     <script>
         
         let currentStep = 1;
-        const totalSteps = 3;
+        const totalSteps = 4;
         const form = document.getElementById('reportForm');
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
@@ -411,14 +437,12 @@
                 const foundNonce = await computeBatch();
 
                 btn.innerText = 'Submitting...';
-                const payload = Object.fromEntries(formData.entries());
-                payload.pow_challenge = challenge;
-                payload.pow_nonce = foundNonce;
+                formData.append('pow_challenge', challenge);
+                formData.append('pow_nonce', foundNonce);
 
                 const resSubmit = await fetch('/api/ledger', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: formData
                 });
 
                 
