@@ -28,7 +28,7 @@
             </div>
         </div>
     </nav>
-    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
         <div class="text-center mb-10">
             <h1 class="text-3xl font-black mb-4 text-gray-900">Entity Intelligence Search</h1>
             <p class="text-sm text-gray-500">Search for a company to view its full aggregated SLA track record.</p>
@@ -41,7 +41,7 @@
             <input type="text" id="masterSearch" placeholder="Type a protocol or company name (e.g. MakerDAO)..." class="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange transition text-lg shadow-sm">
         </div>
 
-        <div id="searchResults" class="space-y-6">
+        <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Results injected here -->
             <div class="text-center text-gray-400 mt-10">Start typing to perform an aggregated search...</div>
         </div>
@@ -55,6 +55,15 @@
     </footer>
 
     <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q');
+            if (q) {
+                document.getElementById('masterSearch').value = q;
+            }
+        });
+
         let allReports = [];
         async function fetchAll() {
             try {
@@ -91,7 +100,8 @@
             // Sort by count
             const sorted = Object.values(groups).sort((a,b) => b.count - a.count);
 
-            resultsDiv.innerHTML = '';
+            
+            let htmlStr = '';
             sorted.forEach(g => {
                 const issuesHtml = Object.entries(g.issues).map(([issue, count]) => {
                     let color = 'bg-gray-100 text-gray-700 border-gray-200';
@@ -102,6 +112,44 @@
 
                 const dateObj = new Date(g.lastDate);
                 const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                htmlStr += `
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex flex-col mb-4 border-b border-gray-100 pb-4">
+                                <h2 class="text-2xl font-black text-gray-900">${g.name}</h2>
+                                <p class="text-sm text-gray-500 mt-1 mb-2">Platforms: ${Array.from(g.platforms).join(', ')}</p>
+                                <div class="flex items-end justify-between w-full">
+                                    <div class="text-3xl font-black text-gray-800">${g.count} <span class="text-sm font-medium text-gray-400">reports</span></div>
+                                </div>
+                                <div class="text-xs text-gray-400 mt-1">Last activity: ${dateStr}</div>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Issue Breakdown</h4>
+                                <div class="flex flex-wrap">${issuesHtml}</div>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-gray-100">
+                            <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                Share & Embed
+                            </h4>
+                            <div class="flex flex-col gap-2">
+                                <button onclick="shareToX('${encodeURIComponent(g.name)}', ${g.count})" class="w-full bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white py-2 px-3 rounded-lg text-xs font-medium transition flex justify-center items-center gap-2 shadow-sm">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                                    Share on X
+                                </button>
+                                <button onclick="copyBadge('${encodeURIComponent(g.name)}', ${g.count})" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium transition flex justify-center items-center gap-2 shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    Copy Badge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            resultsDiv.innerHTML = htmlStr;
+
 
                 resultsDiv.innerHTML += `
                     <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
@@ -121,6 +169,23 @@
                         </div>
                     </div>
                 `;
+            });
+        }
+
+        
+        function shareToX(company, count) {
+            const dec = decodeURIComponent(company);
+            const text = encodeURIComponent(`🚨 ${dec} has ${count} unresolved SLA breaches/ghosting reports!\n\nCheck the proofs on BB SLA Tracker:`);
+            const url = encodeURIComponent(window.location.origin + '/search.html?q=' + encodeURIComponent(dec));
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+        
+        function copyBadge(company, count) {
+            const dec = decodeURIComponent(company);
+            const badgeUrl = `https://img.shields.io/badge/SLA_Breaches-${count}-red?style=flat-square`;
+            const md = `[![BB SLA Tracker](${badgeUrl})](${window.location.origin}/search.html?q=${encodeURIComponent(dec)})`;
+            navigator.clipboard.writeText(md).then(() => {
+                alert('Markdown badge copied to clipboard! Paste it in your GitHub readmes or Immunefi reports.');
             });
         }
 
