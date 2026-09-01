@@ -19,6 +19,14 @@
     
     <style>body { font-family: 'Inter', sans-serif; }</style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        .step { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar-fill { transition: width 0.3s ease-in-out; }
+    </style>
+
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
 
@@ -39,183 +47,226 @@
             <p class="text-sm text-gray-500 leading-relaxed max-w-xl mx-auto">This form is 100% anonymous. <strong class="text-gray-800">Do not include technical details about vulnerabilities.</strong> Your browser will perform a Proof-of-Work to prevent spam.</p>
         </div>
 
-        <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-alertOrange to-alertRed"></div>
+        
+        <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gray-100">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-alertOrange to-alertRed progress-bar-fill" style="width: 33%;"></div>
+            </div>
             
             <div class="hidden" aria-hidden="true">
                 <label for="website_url">Honeypot</label>
                 <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Header -->
+            <div class="mb-8 flex justify-between items-end border-b border-gray-100 pb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">1. Category</label>
-                    <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange appearance-none">
-                        <option value="" disabled selected>Select...</option>
-                        <option value="Web / API">Web / API</option>
-                        <option value="Smart Contract / Blockchain">Smart Contract / Blockchain</option>
-                        <option value="Mobile App">Mobile App</option>
-                        <option value="Hardware / IoT">Hardware / IoT</option>
-                    </select>
+                    <h2 id="stepTitle" class="text-2xl font-black text-gray-900">Step 1: The Target</h2>
+                    <p id="stepDesc" class="text-sm text-gray-500 mt-1">Identify the company and platform.</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">2. Platform</label>
-                    <input type="text" name="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
-                    <datalist id="platforms-list">
-                        <option value="HackerOne"></option>
-                        <option value="Bugcrowd"></option>
-                        <option value="Intigriti"></option>
-                        <option value="YesWeHack"></option>
-                        <option value="Synack"></option>
-                        <option value="Yogosha"></option>
-                        <option value="Cobalt"></option>
-                        <option value="Fluid Attacks"></option>
-                        <option value="Inspectiv"></option>
-                        <option value="Hacktify"></option>
-                        <option value="SafeHats"></option>
-                        <option value="Federacy"></option>
-                        <option value="Immunefi"></option>
-                        <option value="Sherlock"></option>
-                        <option value="Code4rena"></option>
-                        <option value="Cantina"></option>
-                        <option value="HackenProof"></option>
-                        <option value="Hats Finance"></option>
-                        <option value="SlowMist"></option>
-                        <option value="Salus Security"></option>
-                        <option value="SecureDApp"></option>
-                        <option value="CertiK Skynet"></option>
-                        <option value="Remedy"></option>
-                        <option value="CUB3"></option>
-                        <option value="BugBountyHQ"></option>
-                        <option value="Huntr"></option>
-                        <option value="Zerodium"></option>
-                        <option value="ZDI"></option>
-                        <option value="Crowdfense"></option>
-                        <option value="SSD Secure Disclosure"></option>
-                        <option value="Open Bug Bounty"></option>
-                        <option value="SecuriTeam"></option>
-                        <option value="Doyensec"></option>
-                        <option value="BugBounty.jp"></option>
-                        <option value="Vulbox"></option>
-                        <option value="Butian"></option>
-                        <option value="Gitee SRC"></option>
-                        <option value="Standoff365"></option>
-                        <option value="WhiteHub"></option>
-                        <option value="CyberArmy"></option>
-                        <option value="Bugrank"></option>
-                        <option value="Hacktrophy"></option>
-                        <option value="Antihack"></option>
-                        <option value="Pentabug"></option>
-                        <option value="PassTheHash"></option>
-                        <option value="Google VRP"></option>
-                        <option value="Meta Bug Bounty"></option>
-                        <option value="Apple Security Bounty"></option>
-                        <option value="Microsoft Bounty Program"></option>
-                        <option value="Intel Bug Bounty"></option>
-                        <option value="Tencent SRC"></option>
-                        <option value="Alibaba SRC"></option>
-                        <option value="Epic Games Bug Bounty"></option>
-                        <option value="Sony PlayStation"></option>
-                        <option value="Nintendo Bug Bounty"></option>
-                        <option value="Trustwave SpiderLabs"></option>
-                        <option value="Direct Program"></option>
-                    </datalist>
+                <div class="text-sm font-bold text-alertOrange">
+                    <span id="stepIndicator">1</span> / 3
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-600 mb-2">3. Target Company or Protocol</label>
-                <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
-                <datalist id="companies-list">
-                    <!-- Populated by JS -->
-                </datalist>
-                <p class="text-xs text-gray-500 mt-2">Type to search existing companies or enter a new one.</p>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
-                <div class="space-y-3">
-                    <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                        <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                        <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
-                    </label>
-                    <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                        <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                        <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
-                    </label>
-                    <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
-                        <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
-                        <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
-                    </label>
-                    <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                        <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                        <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
-                    </label>
-                    <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                        <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                        <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-200 pt-8">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-3">5. Severity</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="severity" value="Critical" required class="peer sr-only">
-                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertRed peer-checked:bg-alertRed/10 text-center text-gray-500 peer-checked:text-alertRed shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                <span class="block font-black text-base uppercase tracking-wide">Critical</span>
-                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 1</span>
-                            </div>
-                        </label>
-                        
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="severity" value="High" class="peer sr-only">
-                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertOrange peer-checked:bg-alertOrange/10 text-center text-gray-500 peer-checked:text-alertOrange shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                <span class="block font-black text-base uppercase tracking-wide">High</span>
-                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 2</span>
-                            </div>
-                        </label>
-
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="severity" value="Medium" class="peer sr-only">
-                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 text-center text-gray-500 peer-checked:text-yellow-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                <span class="block font-black text-base uppercase tracking-wide">Medium</span>
-                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 3</span>
-                            </div>
-                        </label>
-
-                        <label class="cursor-pointer relative">
-                            <input type="radio" name="severity" value="Low" class="peer sr-only">
-                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 text-center text-gray-500 peer-checked:text-blue-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                <span class="block font-black text-base uppercase tracking-wide">Low</span>
-                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 4</span>
-                            </div>
-                        </label>
-
+            <!-- Step 1 -->
+            <div class="step active space-y-8" id="step1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">1. Category</label>
+                        <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange appearance-none">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Web / API">Web / API</option>
+                            <option value="Smart Contract / Blockchain">Smart Contract / Blockchain</option>
+                            <option value="Mobile App">Mobile App</option>
+                            <option value="Hardware / IoT">Hardware / IoT</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">2. Platform</label>
+                        <input type="text" name="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
+                        <datalist id="platforms-list">
+                            <option value="HackerOne"></option>
+                            <option value="Bugcrowd"></option>
+                            <option value="Intigriti"></option>
+                            <option value="YesWeHack"></option>
+                            <option value="Synack"></option>
+                            <option value="Immunefi"></option>
+                            <option value="Sherlock"></option>
+                            <option value="Code4rena"></option>
+                            <option value="Cantina"></option>
+                            <option value="HackenProof"></option>
+                            <option value="Salus Security"></option>
+                            <option value="Independent"></option>
+                            <option value="Other"></option>
+                        </datalist>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">6. Initial Submission Date</label>
-                    <input type="date" name="submission_date" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange color-scheme-dark" style="color-scheme: light;">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">3. Target Company or Protocol</label>
+                    <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
+                    <datalist id="companies-list"></datalist>
                 </div>
             </div>
 
-            <div class="pt-6 flex justify-between items-center">
-                <span class="text-xs text-gray-500 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    PoW Check on Submit
-                </span>
-                <button type="submit" id="submitBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-gray-900 px-8 py-3 rounded-lg font-semibold transition duration-300 shadow-lg backdrop-blur-sm disabled:opacity-50">
-                    Submit Report
+            <!-- Step 2 -->
+            <div class="step space-y-8" id="step2">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
+                            <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
+                            <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                            <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                            <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                            <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                            <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step space-y-8" id="step3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-3">5. Severity</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="severity" value="Critical" required class="peer sr-only">
+                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertRed peer-checked:bg-alertRed/10 text-center text-gray-500 peer-checked:text-alertRed shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                    <span class="block font-black text-base uppercase tracking-wide">Critical</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="severity" value="High" class="peer sr-only">
+                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertOrange peer-checked:bg-alertOrange/10 text-center text-gray-500 peer-checked:text-alertOrange shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                    <span class="block font-black text-base uppercase tracking-wide">High</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="severity" value="Medium" class="peer sr-only">
+                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 text-center text-gray-500 peer-checked:text-yellow-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                    <span class="block font-black text-base uppercase tracking-wide">Medium</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="severity" value="Low" class="peer sr-only">
+                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 text-center text-gray-500 peer-checked:text-blue-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                    <span class="block font-black text-base uppercase tracking-wide">Low</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">6. Initial Submission Date</label>
+                        <input type="date" name="submission_date" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange color-scheme-dark" style="color-scheme: light;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="pt-8 mt-4 flex justify-between items-center border-t border-gray-100">
+                <button type="button" id="prevBtn" class="hidden text-gray-500 hover:text-gray-900 font-medium px-4 py-2 transition">
+                    &larr; Back
+                </button>
+                <div class="flex-grow"></div>
+                <button type="button" id="nextBtn" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
+                    Next Step
+                </button>
+                <button type="submit" id="submitBtn" class="hidden bg-alertRed hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
+                    Submit Report 🚀
                 </button>
             </div>
         </form>
+
     </main>
 
     <script>
+        
+        let currentStep = 1;
+        const totalSteps = 3;
+        const form = document.getElementById('reportForm');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        const titles = ["Step 1: The Target", "Step 2: The Issue", "Step 3: The Impact"];
+        const descs = ["Identify the company and platform.", "What exactly went wrong?", "Rate the severity and timeline."];
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            
+            document.getElementById('progressBar').style.width = ((step / totalSteps) * 100) + '%';
+            document.getElementById('stepIndicator').innerText = step;
+            document.getElementById('stepTitle').innerText = titles[step-1];
+            document.getElementById('stepDesc').innerText = descs[step-1];
+
+            if (step === 1) {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            } else if (step === totalSteps) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            // Validate current step
+            const currentStepEl = document.getElementById('step' + currentStep);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            let valid = true;
+            inputs.forEach(i => {
+                if (!i.checkValidity()) {
+                    i.reportValidity();
+                    valid = false;
+                }
+            });
+            if (valid && currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        // Prevent Enter key from submitting form prematurely
+        form.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                if (currentStep < totalSteps) {
+                    nextBtn.click();
+                } else {
+                    submitBtn.click();
+                }
+            }
+        });
+
+
         // Populate companies list
         async function loadCompanies() {
             try {
