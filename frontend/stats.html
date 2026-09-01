@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats - BB SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900' }, fontFamily: { sans: ['ui-sans-serif', 'system-ui', 'sans-serif'] } } } }</script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg tracking-wide text-gray-900">BB SLA Tracker</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+                    <a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>
+                    <a href="stats.html" class="text-blue-600 font-bold text-sm transition">Stats</a>
+                    <a href="legal.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Legal</a>
+                    <a href="submit.html" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg backdrop-blur-sm">Submit Report</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+        <div class="mb-8">
+            <h1 class="text-3xl font-black mb-2 text-gray-900">Hall of Shame</h1>
+            <p class="text-gray-500">Live analytics on Bug Bounty SLA breaches.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
+            
+            <!-- Left Column: Global Stats + Issue Types -->
+            <div class="flex flex-col gap-6">
+                <!-- Global Stats -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">Global Tracker Stats</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <p class="text-sm text-gray-500 font-medium mb-1">Total Reports</p>
+                            <p class="text-3xl font-black text-gray-900" id="statTotal">--</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <p class="text-sm text-gray-500 font-medium mb-1">Companies Tracked</p>
+                            <p class="text-3xl font-black text-alertOrange" id="statCompanies">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issue Types Breakdown -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6">Abuse Types Breakdown</h2>
+                    <div id="issueBreakdownList" class="space-y-4">
+                         <div class="text-gray-400 text-sm">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Traffic Analytics -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Traffic Analytics (Public)
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-gray-100 text-gray-500">
+                                    <th class="py-2 font-medium">Page</th>
+                                    <th class="py-2 font-medium">Views</th>
+                                    <th class="py-2 font-medium text-right">Unique (Today)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analyticsTable">
+                                <tr><td colspan="3" class="py-2 text-center text-gray-400">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Top Enterprises -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-gray-900">Top Delayed Enterprises</h2>
+                    <span class="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded-md">Click to view details</span>
+                </div>
+                <div id="topCompaniesList" class="space-y-4">
+                    <div class="animate-pulse flex flex-col gap-3">
+                        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                        <div class="h-2 bg-gray-200 rounded w-full"></div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm font-medium">Community-driven SLA metadata. Open Source.</p>
+        </div>
+    </footer>
+
+    <script>
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return diffInSeconds + 's ago';
+            if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + 'm ago';
+            if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + 'h ago';
+            return Math.floor(diffInSeconds / 86400) + 'd ago';
+        }
+
+        function calculateDelay(subDate) {
+            const d1 = new Date(subDate);
+            const d2 = new Date();
+            return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+        }
+
+        function getSeverityColor(sev) {
+            if (sev === 'Critical' || sev === 'P1') return 'text-alertRed bg-alertRed/10 border-alertRed/20';
+            if (sev === 'High' || sev === 'P2') return 'text-alertOrange bg-alertOrange/10 border-alertOrange/20';
+            if (sev === 'Medium') return 'text-yellow-600 bg-yellow-100 border-yellow-200';
+            return 'text-gray-600 bg-white/5 border-gray-200';
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                
+                // Fixed data bindings based on actual API response structure
+                document.getElementById('statTotal').innerText = data.totals.totalReports;
+                document.getElementById('statCompanies').innerText = data.totals.totalCompanies;
+
+                const sortedCompanies = data.companyStats.sort((a, b) => b.count - a.count);
+                let maxReports = sortedCompanies.length > 0 ? sortedCompanies[0].count : 1;
+                
+                let html = '';
+                sortedCompanies.slice(0, 10).forEach((c, index) => {
+                    const percentage = (c.count / maxReports) * 100;
+                    let bgClass = 'bg-alertRed';
+                    if (index > 2) bgClass = 'bg-alertOrange';
+                    if (index > 6) bgClass = 'bg-yellow-400';
+
+                    html += `
+                    <div class="group relative cursor-pointer" onclick="toggleCompanyReports('${c.company_name.replace(/'/g, "\\'")}')">
+                        <div class="flex justify-between items-center text-sm mb-2">
+                            <span class="font-bold text-gray-900 group-hover:text-blue-600 transition flex items-center gap-2">
+                                <span class="w-4 inline-block text-gray-400 text-right">${index + 1}.</span> 
+                                ${c.company_name}
+                                <svg class="w-3.5 h-3.5 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </span>
+                            <span class="font-bold text-gray-500">${c.count} ${c.count === 1 ? 'Report' : 'Reports'}</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2">
+                            <div class="${bgClass} h-1.5 rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
+                        </div>
+                        <!-- Dropdown container -->
+                        <div id="company-reports-${c.company_name.replace(/\s/g, '-')}" class="hidden flex-col gap-2 mt-4 mb-6 pl-4 border-l-2 border-gray-200">
+                            <div class="text-xs text-gray-400 py-2">Loading...</div>
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('topCompaniesList').innerHTML = html || '<div class="text-gray-400">No data available</div>';
+
+                let issueHtml = '';
+                data.issueStats.forEach(i => {
+                    issueHtml += `
+                    <div class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                        <span class="text-gray-700 font-medium">${i.issue_type}</span>
+                        <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md font-bold text-xs">${i.count}</span>
+                    </div>`;
+                });
+                document.getElementById('issueBreakdownList').innerHTML = issueHtml || '<div class="text-gray-400">No data available</div>';
+
+            } catch (error) {
+                console.error("Error loading stats", error);
+            }
+        }
+
+        let currentlyOpen = null;
+        
+        async function toggleCompanyReports(company) {
+            const safeId = company.replace(/\s/g, '-');
+            const container = document.getElementById('company-reports-' + safeId);
+            
+            if (currentlyOpen && currentlyOpen !== container) {
+                currentlyOpen.classList.add('hidden');
+            }
+            
+            if (!container.classList.contains('hidden')) {
+                container.classList.add('hidden');
+                currentlyOpen = null;
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            currentlyOpen = container;
+
+            try {
+                const res = await fetch('/api/reports?search=' + encodeURIComponent(company));
+                const reports = await res.json();
+                
+                let innerHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">';
+                reports.forEach(r => {
+                    const timeAgo = formatTimeAgo(r.created_at);
+                    const severityHtml = (r.severity && r.severity !== 'N/A') 
+                        ? `<span class="px-2 py-0.5 rounded font-bold border ${getSeverityColor(r.severity)} text-[9px] uppercase tracking-wider">${r.severity}</span>` 
+                        : '';
+
+                    innerHtml += `
+                    <div class="bg-white border border-gray-200 p-3 rounded-lg shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-2 gap-2">
+                            <h3 class="font-bold text-gray-800 text-[11px] leading-tight line-clamp-2">${r.issue_type}</h3>
+                            <span class="text-[9px] text-gray-400 whitespace-nowrap font-medium mt-0.5">${timeAgo}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-50">
+                            <div class="flex items-center gap-2">
+                                ${severityHtml}
+                                <span class="text-[9px] text-gray-500"><span class="font-bold text-alertRed">${calculateDelay(r.submission_date)}d</span> wait</span>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                innerHtml += '</div>';
+                
+                if (reports.length === 0) innerHtml = '<div class="text-xs text-gray-400 py-2">No active reports.</div>';
+                
+                container.innerHTML = innerHtml;
+            } catch (e) {
+                container.innerHTML = '<div class="text-red-500 text-xs py-2">Error loading data.</div>';
+            }
+        }
+
+        fetchStats();
+
+        async function fetchAnalytics() {
+            try {
+                const res = await fetch('/api/admin/analytics');
+                const data = await res.json();
+                const tbody = document.getElementById('analyticsTable');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="py-2 text-center text-gray-400">No data</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(r => `
+                    <tr class="border-b border-gray-50 hover:bg-gray-50/50">
+                        <td class="py-2 font-medium text-gray-800">${r.path}</td>
+                        <td class="py-2 text-gray-600">${r.views}</td>
+                        <td class="py-2 text-blue-600 font-bold">${r.uniques}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error("Error loading analytics", error);
+            }
+        }
+        fetchAnalytics();
+    </script>
+
+    <!-- Privacy-respecting Analytics -->
+    <script>
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/' })
+        }).catch(e => {});
+    </script>
+</body>
+</html>

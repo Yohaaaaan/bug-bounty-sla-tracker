@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Report - BB SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Feed
+            </a>
+            <span class="font-semibold text-alertOrange text-sm tracking-wide uppercase">Secure Submission</span>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-3xl mx-auto px-4 py-12 w-full">
+        
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-bold mb-3 text-gray-900">Report an Issue</h1>
+            <p class="text-sm text-gray-500 leading-relaxed max-w-xl mx-auto">This form is 100% anonymous. <strong class="text-gray-800">Do not include technical details about vulnerabilities.</strong> Your browser will perform a Proof-of-Work to prevent spam.</p>
+        </div>
+
+        <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-alertOrange to-alertRed"></div>
+            
+            <div class="hidden" aria-hidden="true">
+                <label for="website_url">Honeypot</label>
+                <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">1. Category</label>
+                    <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange appearance-none">
+                        <option value="" disabled selected>Select...</option>
+                        <option value="Web / API">Web / API</option>
+                        <option value="Smart Contract / Blockchain">Smart Contract / Blockchain</option>
+                        <option value="Mobile App">Mobile App</option>
+                        <option value="Hardware / IoT">Hardware / IoT</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">2. Platform</label>
+                    <input type="text" name="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
+                    <datalist id="platforms-list">
+                        <option value="HackerOne"></option>
+                        <option value="Bugcrowd"></option>
+                        <option value="Intigriti"></option>
+                        <option value="YesWeHack"></option>
+                        <option value="Synack"></option>
+                        <option value="Yogosha"></option>
+                        <option value="Cobalt"></option>
+                        <option value="Fluid Attacks"></option>
+                        <option value="Inspectiv"></option>
+                        <option value="Hacktify"></option>
+                        <option value="SafeHats"></option>
+                        <option value="Federacy"></option>
+                        <option value="Immunefi"></option>
+                        <option value="Sherlock"></option>
+                        <option value="Code4rena"></option>
+                        <option value="Cantina"></option>
+                        <option value="HackenProof"></option>
+                        <option value="Hats Finance"></option>
+                        <option value="SlowMist"></option>
+                        <option value="Salus Security"></option>
+                        <option value="SecureDApp"></option>
+                        <option value="CertiK Skynet"></option>
+                        <option value="Remedy"></option>
+                        <option value="CUB3"></option>
+                        <option value="BugBountyHQ"></option>
+                        <option value="Huntr"></option>
+                        <option value="Zerodium"></option>
+                        <option value="ZDI"></option>
+                        <option value="Crowdfense"></option>
+                        <option value="SSD Secure Disclosure"></option>
+                        <option value="Open Bug Bounty"></option>
+                        <option value="SecuriTeam"></option>
+                        <option value="Doyensec"></option>
+                        <option value="BugBounty.jp"></option>
+                        <option value="Vulbox"></option>
+                        <option value="Butian"></option>
+                        <option value="Gitee SRC"></option>
+                        <option value="Standoff365"></option>
+                        <option value="WhiteHub"></option>
+                        <option value="CyberArmy"></option>
+                        <option value="Bugrank"></option>
+                        <option value="Hacktrophy"></option>
+                        <option value="Antihack"></option>
+                        <option value="Pentabug"></option>
+                        <option value="PassTheHash"></option>
+                        <option value="Google VRP"></option>
+                        <option value="Meta Bug Bounty"></option>
+                        <option value="Apple Security Bounty"></option>
+                        <option value="Microsoft Bounty Program"></option>
+                        <option value="Intel Bug Bounty"></option>
+                        <option value="Tencent SRC"></option>
+                        <option value="Alibaba SRC"></option>
+                        <option value="Epic Games Bug Bounty"></option>
+                        <option value="Sony PlayStation"></option>
+                        <option value="Nintendo Bug Bounty"></option>
+                        <option value="Trustwave SpiderLabs"></option>
+                        <option value="Direct Program"></option>
+                    </datalist>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">3. Target Company or Protocol</label>
+                <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
+                <datalist id="companies-list">
+                    <!-- Populated by JS -->
+                </datalist>
+                <p class="text-xs text-gray-500 mt-2">Type to search existing companies or enter a new one.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
+                <div class="space-y-3">
+                    <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                        <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                        <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
+                    </label>
+                    <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                        <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                        <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
+                    </label>
+                    <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
+                        <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
+                        <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
+                    </label>
+                    <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                        <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                        <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
+                    </label>
+                    <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
+                        <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
+                        <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-200 pt-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-3">5. Severity</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="severity" value="Critical" required class="peer sr-only">
+                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertRed peer-checked:bg-alertRed/10 text-center text-gray-500 peer-checked:text-alertRed shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                <span class="block font-black text-base uppercase tracking-wide">Critical</span>
+                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 1</span>
+                            </div>
+                        </label>
+                        
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="severity" value="High" class="peer sr-only">
+                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertOrange peer-checked:bg-alertOrange/10 text-center text-gray-500 peer-checked:text-alertOrange shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                <span class="block font-black text-base uppercase tracking-wide">High</span>
+                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 2</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="severity" value="Medium" class="peer sr-only">
+                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 text-center text-gray-500 peer-checked:text-yellow-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                <span class="block font-black text-base uppercase tracking-wide">Medium</span>
+                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 3</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="severity" value="Low" class="peer sr-only">
+                            <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 text-center text-gray-500 peer-checked:text-blue-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
+                                <span class="block font-black text-base uppercase tracking-wide">Low</span>
+                                <span class="block text-xs font-medium mt-1 opacity-70">Priority 4</span>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">6. Initial Submission Date</label>
+                    <input type="date" name="submission_date" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange color-scheme-dark" style="color-scheme: light;">
+                </div>
+            </div>
+
+            <div class="pt-6 flex justify-between items-center">
+                <span class="text-xs text-gray-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    PoW Check on Submit
+                </span>
+                <button type="submit" id="submitBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-gray-900 px-8 py-3 rounded-lg font-semibold transition duration-300 shadow-lg backdrop-blur-sm disabled:opacity-50">
+                    Submit Report
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Populate companies list
+        async function loadCompanies() {
+            try {
+                const res = await fetch('/api/companies');
+                const companies = await res.json();
+                const datalist = document.getElementById('companies-list');
+                // Seed test companies if empty
+                if (!companies.includes('Ostium')) datalist.innerHTML += '<option value="Ostium"></option>';
+                if (!companies.includes('Livepeer')) datalist.innerHTML += '<option value="Livepeer"></option>';
+                
+                companies.forEach(c => {
+                    if(c !== 'Ostium' && c !== 'Livepeer') datalist.innerHTML += `<option value="${c}"></option>`;
+                });
+            } catch (e) { console.error(e); }
+        }
+        loadCompanies();
+
+        // Form submission with PoW
+        document.getElementById('reportForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = 'Verifying PoW...';
+
+            try {
+                const formData = new FormData(e.target);
+                const issueType = formData.get('issue_type');
+                const subDate = new Date(formData.get('submission_date'));
+                const daysDiff = (new Date() - subDate) / (1000 * 60 * 60 * 24);
+
+                if (issueType.includes('Ghosting') && daysDiff < 14) {
+                    alert('Error: For "Ghosting", the initial submission date must be at least 14 days ago.');
+                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                }
+                if (issueType.includes('Response Delay') && daysDiff < 7) {
+                    alert('Error: For a "Response Delay", the submission must be at least 7 days old.');
+                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                }
+                if (issueType.includes('Resolution Delay') && daysDiff < 30) {
+                    alert('Error: For a "Resolution Delay", the submission must be at least 30 days old.');
+                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                }
+
+                const resChallenge = await fetch('/api/pow-challenge');
+                const { challenge, difficulty } = await resChallenge.json();
+
+                let nonce = 0;
+                const prefix = '0'.repeat(difficulty);
+                const encoder = new TextEncoder();
+                
+                // Keep UI somewhat responsive
+                const computeBatch = async () => {
+                    for(let i=0; i<20000; i++) {
+                        // Using CryptoJS for non-HTTPS environments
+                        const hashHex = CryptoJS.SHA256(challenge + nonce).toString(CryptoJS.enc.Hex);
+                        if (hashHex.startsWith(prefix)) return nonce;
+                        nonce++;
+                    }
+                    return new Promise(resolve => setTimeout(() => resolve(computeBatch()), 0));
+                };
+
+                btn.innerText = 'Calculating Proof of Work...';
+                const foundNonce = await computeBatch();
+
+                btn.innerText = 'Submitting...';
+                const payload = Object.fromEntries(formData.entries());
+                payload.pow_challenge = challenge;
+                payload.pow_nonce = foundNonce;
+
+                const resSubmit = await fetch('/api/reports', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (resSubmit.ok) {
+                    window.location.href = 'index.html';
+                } else {
+                    const err = await resSubmit.json();
+                    alert('Error: ' + (err.error || 'Submission failed'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Connection error. Is the backend running?');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Submit Report';
+            }
+        });
+    </script>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">BB SLA Tracker &copy; 2026. Community Driven.</p>
+            <div class="mt-2 space-x-4">
+                <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy-respecting Analytics -->
+    <script>
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/' })
+        }).catch(e => {});
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - BB SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { alertOrange: '#ff9900' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-alertOrange to-red-500 flex items-center justify-center shadow-md">
+                        <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide text-gray-900">BB SLA Tracker</span>
+                </div>
+                
+<div class="flex items-center space-x-6">
+    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+    <a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>
+    <a href="stats.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Stats</a>
+    <a href="legal.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Legal</a>
+    <a href="submit.html" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg backdrop-blur-sm">Submit Report</a>
+</div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-3xl mx-auto px-4 py-16 w-full text-center">
+        <h1 class="text-4xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">About This Project</h1>
+        
+        <div class="bg-white shadow-md border border-gray-200 rounded-2xl p-8 sm:p-12 text-left shadow-2xl backdrop-blur-sm mb-8 space-y-6">
+            <h2 class="text-2xl font-semibold text-gray-900">100% Free & Community-Driven</h2>
+            <p class="text-gray-500 leading-relaxed">
+                The Bug Bounty ecosystem thrives on trust. Unfortunately, delayed payouts, ghosting, and ignored Service Level Agreements (SLAs) harm researchers. This tracker is built to bring transparency. 
+            </p>
+            <p class="text-gray-500 leading-relaxed">
+                It is <strong>completely free</strong>, open to everyone, and relies entirely on community reports. No accounts, no tracing, no corporate oversight. Just raw, factual data to help researchers decide where to invest their time.
+            </p>
+
+            <h2 class="text-2xl font-semibold text-gray-900 mt-8">How it works</h2>
+            <ul class="list-disc pl-5 text-gray-500 space-y-2">
+                <li><strong>Anonymous:</strong> We don't track IPs or ask for logins.</li>
+                <li><strong>Anti-Spam:</strong> Every submission requires your browser to solve a cryptographic puzzle (Proof of Work) before the server accepts it.</li>
+                <li><strong>Self-Moderated:</strong> If a report is abusive, the community can downvote it. After enough downvotes, it is automatically hidden.</li>
+            </ul>
+        </div>
+
+        <button onclick="shareSite()" class="inline-flex items-center gap-2 bg-gradient-to-r from-alertOrange to-red-600 hover:from-orange-400 hover:to-red-500 text-gray-900 px-8 py-4 rounded-xl font-bold transition shadow-[0_0_20px_rgba(255,153,0,0.4)]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            Share the Tracker
+        </button>
+    </main>
+
+    <script>
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Bug Bounty SLA Tracker',
+                    text: 'Check out this community-driven tracker for Bug Bounty SLA delays and payment issues.',
+                    url: window.location.origin
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.origin);
+                alert('Link copied to clipboard!');
+            }
+        }
+    </script>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">BB SLA Tracker &copy; 2026. Community Driven.</p>
+            <div class="mt-2 space-x-4">
+                <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy-respecting Analytics -->
+    <script>
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/' })
+        }).catch(e => {});
+    </script>
+</body>
+</html>

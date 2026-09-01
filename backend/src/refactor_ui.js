@@ -1,0 +1,175 @@
+const fs = require('fs');
+
+// 1. Compact Cards in index.html and remove "Status"
+let indexHtml = fs.readFileSync('/mnt/data/bug-bounty-sla-tracker/frontend/index.html', 'utf-8');
+
+// Replace card template in JS
+const oldCard = /\`<div class="bg-white shadow-md border-gray-200 rounded-xl p-6 hover:shadow-lg transition duration-300 relative overflow-hidden group">[\s\S]*?<\/div>\`;/g;
+const newCard = `\`
+    <div class="bg-white shadow-sm border border-gray-100 rounded-lg p-4 hover:shadow-md transition duration-200 relative overflow-hidden group">
+        <div class="absolute top-0 left-0 w-1 h-full \${accentColor} opacity-70 group-hover:opacity-100 transition"></div>
+        <div class="flex justify-between items-start mb-2 pl-2">
+            <h3 class="text-lg font-bold text-gray-900 leading-tight">\${r.company_name}</h3>
+            <span class="text-[10px] text-gray-400 font-medium whitespace-nowrap ml-2">\${timeAgo(r.created_at)}</span>
+        </div>
+        <p class="\${titleColor} font-semibold text-[13px] mb-3 leading-snug pl-2">\${r.issue_type}</p>
+        <div class="flex justify-between items-center text-xs pt-3 border-t border-gray-100 pl-2">
+            <span class="px-2 py-0.5 rounded font-semibold border \${getSeverityColor(r.severity)}">\${r.severity || 'N/A'}</span>
+            <span class="bg-gray-50 text-gray-500 border border-gray-200 px-2 py-0.5 rounded uppercase tracking-wider font-semibold text-[10px]">\${r.platform || 'Unknown'}</span>
+        </div>
+    </div>
+\`;`;
+
+indexHtml = indexHtml.replace(/`<div class="bg-white shadow-md[\s\S]*?<\/div>`;/, newCard);
+indexHtml = indexHtml.replace(/<a href="index.html#search"[^>]*>Search<\/a>/g, 
+                              '<a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>');
+
+// Remove search bar from index HTML
+indexHtml = indexHtml.replace(/<div class="relative w-full sm:w-80">[\s\S]*?<\/div>/, '');
+fs.writeFileSync('/mnt/data/bug-bounty-sla-tracker/frontend/index.html', indexHtml);
+
+// 2. Create search.html
+const searchHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Entities - BB SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900' }, fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg tracking-wide">BB SLA Tracker</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+                    <a href="search.html" class="text-gray-900 text-sm font-medium transition border-b-2 border-alertOrange pb-1">Search</a>
+                    <a href="stats.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Stats</a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">About</a>
+                    <a href="submit.html" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Submit Report</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-black mb-4 text-gray-900">Entity Intelligence Search</h1>
+            <p class="text-sm text-gray-500">Search for a company to view its full aggregated SLA track record.</p>
+        </div>
+        
+        <div class="relative w-full max-w-2xl mx-auto mb-10 shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input type="text" id="masterSearch" placeholder="Type a protocol or company name (e.g. MakerDAO)..." class="w-full bg-white border border-gray-300 rounded-xl py-4 pl-12 pr-4 text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange transition text-lg shadow-sm">
+        </div>
+
+        <div id="searchResults" class="space-y-6">
+            <!-- Results injected here -->
+            <div class="text-center text-gray-400 mt-10">Start typing to perform an aggregated search...</div>
+        </div>
+    </main>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">BB SLA Tracker &copy; 2026. Community Driven.</p>
+            <div class="mt-2 space-x-4"><a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a></div>
+        </div>
+    </footer>
+
+    <script>
+        let allReports = [];
+        async function fetchAll() {
+            try {
+                const res = await fetch('/api/reports');
+                allReports = await res.json();
+                renderAggregated(''); // Render top ones by default
+            } catch(e) { console.error(e); }
+        }
+        fetchAll();
+
+        function renderAggregated(query) {
+            const resultsDiv = document.getElementById('searchResults');
+            if(!allReports.length) return;
+
+            const q = query.toLowerCase().trim();
+            const filtered = q ? allReports.filter(r => r.company_name.toLowerCase().includes(q)) : allReports;
+            
+            if(filtered.length === 0) {
+                resultsDiv.innerHTML = '<div class="text-center text-gray-500">No records found for this entity.</div>';
+                return;
+            }
+
+            // Group by company
+            const groups = {};
+            filtered.forEach(r => {
+                const name = r.company_name;
+                if(!groups[name]) groups[name] = { name, count: 0, platforms: new Set(), issues: {}, lastDate: r.created_at };
+                groups[name].count++;
+                groups[name].platforms.add(r.platform);
+                groups[name].issues[r.issue_type] = (groups[name].issues[r.issue_type] || 0) + 1;
+                if(new Date(r.created_at) > new Date(groups[name].lastDate)) groups[name].lastDate = r.created_at;
+            });
+
+            // Sort by count
+            const sorted = Object.values(groups).sort((a,b) => b.count - a.count);
+
+            resultsDiv.innerHTML = '';
+            sorted.forEach(g => {
+                const issuesHtml = Object.entries(g.issues).map(([issue, count]) => {
+                    let color = 'bg-gray-100 text-gray-700 border-gray-200';
+                    if(issue.includes('Ghosting') || issue.includes('Refusal')) color = 'bg-red-50 text-alertRed border-red-100';
+                    if(issue.includes('Delay') || issue.includes('Downgrade')) color = 'bg-orange-50 text-alertOrange border-orange-100';
+                    return \`<span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold \${color} border mr-2 mb-2">\${issue} <span class="ml-1 bg-white/50 px-1 rounded text-gray-800">\${count}</span></span>\`;
+                }).join('');
+
+                const dateObj = new Date(g.lastDate);
+                const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                resultsDiv.innerHTML += \`
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 border-b border-gray-100 pb-4">
+                            <div>
+                                <h2 class="text-2xl font-black text-gray-900">\${g.name}</h2>
+                                <p class="text-sm text-gray-500 mt-1">Platforms: \${Array.from(g.platforms).join(', ')}</p>
+                            </div>
+                            <div class="mt-3 sm:mt-0 text-right">
+                                <div class="text-3xl font-black text-gray-800">\${g.count} <span class="text-sm font-medium text-gray-400">reports</span></div>
+                                <div class="text-xs text-gray-400 mt-1">Last activity: \${dateStr}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Issue Breakdown</h4>
+                            <div class="flex flex-wrap">\${issuesHtml}</div>
+                        </div>
+                    </div>
+                \`;
+            });
+        }
+
+        document.getElementById('masterSearch').addEventListener('input', (e) => {
+            renderAggregated(e.target.value);
+        });
+    </script>
+</body>
+</html>`;
+
+fs.writeFileSync('/mnt/data/bug-bounty-sla-tracker/frontend/search.html', searchHtml);
+
+// 3. Update navbars across all other files to point to search.html correctly
+const files = ['submit.html', 'about.html', 'stats.html', 'legal.html'];
+for (const file of files) {
+    const path = '/mnt/data/bug-bounty-sla-tracker/frontend/' + file;
+    let content = fs.readFileSync(path, 'utf-8');
+    content = content.replace(/<a href="index.html#search"[^>]*>Search<\/a>/g, 
+                              '<a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>');
+    fs.writeFileSync(path, content);
+}
+console.log('UI compacted and true search engine created.');

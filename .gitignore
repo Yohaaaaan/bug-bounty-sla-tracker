@@ -1,0 +1,17 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+.env.local
+
+# Database (Keep private!)
+backend/db/database.sqlite
+backend/db/*.sqlite3
+backend/db/*.db
+
+# Logs
+backend/*.log
+backend/server.log

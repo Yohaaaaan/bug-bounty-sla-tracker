@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Bounty SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com">
+        async function flagReport(id) {
+            if(!confirm('Report this as spam/fake? Your browser will perform a PoW calculation.')) return;
+            try {
+                const resChallenge = await fetch('/api/pow-challenge');
+                const { challenge, difficulty } = await resChallenge.json();
+                
+                let nonce = 0;
+                const prefix = '0'.repeat(difficulty);
+                const encoder = new TextEncoder();
+                
+                const compute = async () => {
+                    for(let i=0; i<20000; i++) {
+                        // Using CryptoJS for non-HTTPS environments
+                        const hashHex = CryptoJS.SHA256(challenge + nonce).toString(CryptoJS.enc.Hex);
+                        if (hashHex.startsWith(prefix)) return nonce;
+                        nonce++;
+                    }
+                    return new Promise(resolve => setTimeout(() => resolve(compute()), 0));
+                };
+
+                const foundNonce = await compute();
+                
+                const res = await fetch(`/api/reports/${id}/flag`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pow_challenge: challenge, pow_nonce: foundNonce })
+                });
+                
+                if(res.ok) {
+                    alert('Flag submitted.');
+                    fetchReports(document.getElementById('searchInput').value);
+                }
+            } catch(e) {
+                console.error(e);
+                alert('Error flagging report.');
+            }
+        }
+
+</script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900', alertGreen: '#00cc66' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-alertOrange to-red-500 flex items-center justify-center shadow-md">
+                        <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide text-gray-900">BB SLA Tracker</span>
+                </div>
+                
+<div class="flex items-center space-x-6">
+    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+    <a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>
+    <a href="stats.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Stats</a>
+    <a href="legal.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Legal</a>
+    <a href="submit.html" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg backdrop-blur-sm">Submit Report</a>
+</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+        <!-- Hero Section -->
+        <div class="text-center mb-16 relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-alertOrange/20 blur-[100px] rounded-full pointer-events-none"></div>
+            <h1 class="text-5xl sm:text-6xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Transparency in Bug Bounty</h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">Anonymous tracking of unresolved SLAs, ghosting, and payment issues. Driven by the community, secured by Proof-of-Work.</p>
+        </div>
+
+        <!-- Search & Grid -->
+        <div class="space-y-6 relative z-10">
+            <div class="flex flex-col sm:flex-row justify-between items-end sm:items-center border-b border-gray-200 pb-4 mb-8 gap-4">
+                <h2 class="text-xl font-semibold text-gray-800">Latest Community Reports</h2>
+                
+                    <input type="text" id="searchInput" placeholder="Search by company..." class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-3 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange transition backdrop-blur-sm">
+                </div>
+            </div>
+            
+            <div id="reportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-10 text-gray-500">Loading reports...</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return "Just now";
+        }
+
+        function getSeverityColor(sev) {
+            if (sev === 'P1') return 'text-alertRed bg-alertRed/10 border-alertRed/20';
+            if (sev === 'P2') return 'text-alertOrange bg-alertOrange/10 border-alertOrange/20';
+            return 'text-gray-600 bg-white/5 border-gray-200';
+        }
+
+        async function fetchReports(query = '') {
+            try {
+                const res = await fetch(`/api/reports?search=${encodeURIComponent(query)}`);
+                const reports = await res.json();
+                const grid = document.getElementById('reportsGrid');
+                grid.innerHTML = '';
+                
+                if (reports.length === 0) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500">No reports found.</div>';
+                    return;
+                }
+
+                reports.forEach(r => {
+                    // Decide accent color based on issue type
+                    let accentColor = 'bg-gray-600';
+                    let titleColor = 'text-gray-600';
+                    
+                    if (r.issue_type.includes('Refusal') || r.issue_type.includes('Ghosting')) {
+                        accentColor = 'bg-alertRed shadow-sm';
+                        titleColor = 'text-alertRed';
+                    } else if (r.issue_type.includes('Downgrade') || r.issue_type.includes('Delay')) {
+                        accentColor = 'bg-alertOrange shadow-sm';
+                        titleColor = 'text-alertOrange';
+                    }
+
+                    grid.innerHTML += `
+    <div class="bg-white shadow-sm border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-md transition duration-200 relative overflow-hidden group flex flex-col justify-between">
+        <div class="absolute top-0 left-0 w-1 h-full ${accentColor} opacity-70 group-hover:opacity-100 transition"></div>
+        
+        <div class="pl-2 w-full">
+            <div class="flex justify-between items-start mb-1 gap-2">
+                <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight truncate" title="${r.company_name}">${r.company_name}</h3>
+                <span class="text-[10px] text-gray-400 font-medium whitespace-nowrap pt-1">${timeAgo(r.created_at)}</span>
+            </div>
+            
+            <p class="${titleColor} font-semibold text-[12px] mb-3 leading-snug line-clamp-1" title="${r.issue_type}">${r.issue_type}</p>
+            
+            <div class="flex justify-between items-center text-xs pt-3 border-t border-gray-100 pl-2">
+                <div class="flex items-center gap-2">
+                    ${r.severity && r.severity !== 'N/A' ? `<span class="px-2 py-0.5 rounded font-bold border ${getSeverityColor(r.severity)} text-[10px]">${r.severity}</span>` : '<div></div>'}
+                    <button onclick="flagReport('${r.id}')" title="Flag as fake/spam" class="text-gray-300 hover:text-red-500 transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                    </button>
+                </div>
+                <span class="bg-gray-50 text-gray-500 border border-gray-200 px-2 py-0.5 rounded uppercase tracking-wider font-bold text-[9px] truncate max-w-[100px] text-right" title="${r.platform || 'Unknown'}">${r.platform || 'Unknown'}</span>
+            </div>
+        </div>
+    </div>
+`;
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            fetchReports(e.target.value);
+        });
+
+        // Init
+        fetchReports();
+    </script>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">BB SLA Tracker &copy; 2026. Community Driven.</p>
+            <div class="mt-2 space-x-4">
+                <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy-respecting Analytics -->
+    <script>
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/' })
+        }).catch(e => {});
+    </script>
+</body>
+</html>

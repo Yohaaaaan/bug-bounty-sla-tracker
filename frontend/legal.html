@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal & Privacy - BB SLA Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg tracking-wide">BB SLA Tracker</span>
+                </div>
+                
+<div class="flex items-center space-x-6">
+    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+    <a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>
+    <a href="stats.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Stats</a>
+    <a href="legal.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Legal</a>
+    <a href="submit.html" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg backdrop-blur-sm">Submit Report</a>
+</div>
+            </div>
+        </div>
+    </nav>
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
+        <h1 class="text-3xl font-black mb-8">Privacy Policy & Terms of Use</h1>
+        
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 space-y-6">
+            
+            <section>
+                <h2 class="text-xl font-bold mb-3">2. Content & Safe Harbor</h2>
+                <p class="text-gray-600 leading-relaxed mb-3">This platform is a community-driven aggregator of purely factual SLA (Service Level Agreement) metadata. We act strictly as a hosting provider (Safe Harbor) and do not editorialize or create the content submitted by users.</p>
+                <p class="text-gray-600 leading-relaxed"><strong>Takedown Policy & Contact:</strong> If you represent an organization and believe a report is demonstrably false, defamatory, or contains sensitive PII/vulnerability details, you can request a manual review and takedown by contacting us at: <a href="contact.html" class="text-alertOrange font-bold hover:underline">Secure Contact Form</a>.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">3. Anti-Spam (Proof-of-Work)</h2>
+                <p class="text-gray-600 leading-relaxed">To prevent automated abuse without using invasive captchas (like reCAPTCHA), we utilize a client-side cryptographic Proof-of-Work (PoW). Your device computes a hash to validate the submission.</p>
+            </section>
+            <section>
+                <h2 class="text-xl font-bold mb-3">4. Community Moderation</h2>
+                <p class="text-gray-600 leading-relaxed">Reports are self-moderated by the community. Any report receiving a threshold of downvotes is automatically quarantined and hidden from the public feed.</p>
+            </section>
+            <section>
+                <h2 class="text-xl font-bold mb-3">5. Open Source & Liability</h2>
+                <p class="text-gray-600 leading-relaxed">This tool is provided "as is", without warranty of any kind. We are not affiliated with any bug bounty platforms or companies listed in the database.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Privacy-respecting Analytics -->
+    <script>
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/' })
+        }).catch(e => {});
+    </script>
+</body>
+</html>
