@@ -162,7 +162,7 @@
                 
                 if (reports.length === 0) {
                     
-                grid.innerHTML = \`
+                grid.innerHTML = `
                     <div class="col-span-full text-center py-12 px-4 bg-white rounded-2xl border border-gray-200 border-dashed">
                         <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         <h3 class="text-xl font-bold text-gray-900 mb-2">No reports found</h3>
@@ -171,7 +171,7 @@
                             🔴 Be the first to report them!
                         </a>
                     </div>
-                \`;
+                `;
 
                     return;
                 }
@@ -279,13 +279,13 @@
                 const top3 = data.companyStats.slice(0, 3);
                 let wosHtml = '';
                 top3.forEach((c, i) => {
-                    wosHtml += \`
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center cursor-pointer hover:border-alertRed transition" onclick="document.getElementById('searchInput').value='\${c.company_name}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
-                            <span class="text-3xl mb-1">\${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
-                            <h3 class="font-bold text-gray-900">\${c.company_name}</h3>
-                            <span class="text-xs font-black text-alertRed bg-alertRed/10 px-2 py-0.5 rounded-full mt-1">\${c.count} Breaches</span>
+                    wosHtml += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center cursor-pointer hover:border-alertRed transition" onclick="document.getElementById('searchInput').value='${c.company_name}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+                            <span class="text-3xl mb-1">${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
+                            <h3 class="font-bold text-gray-900">${c.company_name}</h3>
+                            <span class="text-xs font-black text-alertRed bg-alertRed/10 px-2 py-0.5 rounded-full mt-1">${c.count} Breaches</span>
                         </div>
-                    \`;
+                    `;
                 });
                 document.getElementById('wallOfShameList').innerHTML = wosHtml;
 
@@ -299,7 +299,7 @@
                     setInterval(() => {
                         const r = recent[fomoIndex];
                         document.getElementById('fomoCompany').innerText = r.company_name;
-                        document.getElementById('fomoText').innerHTML = \`New <strong>\${r.issue_type}</strong> reported for <span class="font-bold text-alertOrange">\${r.company_name}</span>!\`;
+                        document.getElementById('fomoText').innerHTML = `New <strong>${r.issue_type}</strong> reported for <span class="font-bold text-alertOrange">${r.company_name}</span>!`;
                         document.getElementById('fomoTime').innerText = formatTimeAgo(r.created_at);
                         
                         const toast = document.getElementById('fomoToast');
