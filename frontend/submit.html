@@ -71,10 +71,16 @@
 
             <!-- Step 1 -->
             <div class="step active space-y-8" id="step1">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">1. Target Company or Protocol</label>
+                    <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-4 px-4 text-lg text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
+                    <datalist id="companies-list"></datalist>
+                    <p class="text-xs text-gray-500 mt-2">Start typing to see existing entities.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-100">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">1. Category</label>
-                        <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange appearance-none">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">2. Category</label>
+                        <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange appearance-none shadow-sm">
                             <option value="" disabled selected>Select...</option>
                             <option value="Web / API">Web / API</option>
                             <option value="Smart Contract / Blockchain">Smart Contract / Blockchain</option>
@@ -83,8 +89,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">2. Platform</label>
-                        <input type="text" name="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">3. Platform</label>
+                        <input type="text" name="platform" id="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
                         <datalist id="platforms-list">
                             <option value="HackerOne"></option>
                             <option value="Bugcrowd"></option>
@@ -102,81 +108,37 @@
                         </datalist>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-2">3. Target Company or Protocol</label>
-                    <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange">
-                    <datalist id="companies-list"></datalist>
-                </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="step space-y-8" id="step2">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
-                    <div class="space-y-3">
-                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
-                        </label>
-                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
-                        </label>
-                        <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
-                            <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
-                            <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                            <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                            <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
-                        </label>
-                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                            <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                            <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
-                        </label>
-                    </div>
-                </div>
             </div>
 
             <!-- Step 3 -->
             <div class="step space-y-8" id="step3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-3">5. Severity</label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="severity" value="Critical" required class="peer sr-only">
-                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertRed peer-checked:bg-alertRed/10 text-center text-gray-500 peer-checked:text-alertRed shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                    <span class="block font-black text-base uppercase tracking-wide">Critical</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="severity" value="High" class="peer sr-only">
-                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-alertOrange peer-checked:bg-alertOrange/10 text-center text-gray-500 peer-checked:text-alertOrange shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                    <span class="block font-black text-base uppercase tracking-wide">High</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="severity" value="Medium" class="peer sr-only">
-                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 text-center text-gray-500 peer-checked:text-yellow-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                    <span class="block font-black text-base uppercase tracking-wide">Medium</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="severity" value="Low" class="peer sr-only">
-                                <div class="h-full rounded-xl border-2 border-gray-200 px-4 py-4 hover:border-gray-300 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 text-center text-gray-500 peer-checked:text-blue-600 shadow-sm peer-checked:shadow-md transform peer-checked:-translate-y-1">
-                                    <span class="block font-black text-base uppercase tracking-wide">Low</span>
-                                </div>
-                            </label>
+                        <label class="block text-sm font-medium text-gray-600 mb-6">5. Severity</label>
+                        
+                        <div class="relative px-2">
+                            <input type="range" id="severityRange" min="1" max="4" step="1" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-alertOrange">
+                            
+                            <div class="flex justify-between mt-4 text-xs font-bold text-gray-400">
+                                <span class="text-blue-500">Low</span>
+                                <span class="text-yellow-500">Med</span>
+                                <span class="text-alertOrange">High</span>
+                                <span class="text-alertRed">Crit</span>
+                            </div>
                         </div>
+                        <input type="hidden" name="severity" id="severityInput" value="Medium">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">6. Initial Submission Date</label>
-                        <input type="date" name="submission_date" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange color-scheme-dark" style="color-scheme: light;">
+                        <label class="block text-sm font-medium text-gray-600 mb-3">6. Initial Submission Date</label>
+                        <div class="relative">
+                            <input type="date" name="submission_date" required class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity">
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">When did you initially submit this report?</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Navigation Buttons -->
             <!-- Navigation Buttons -->
             <div class="pt-8 mt-4 flex justify-between items-center border-t border-gray-100">
                 <button type="button" id="prevBtn" class="hidden text-gray-500 hover:text-gray-900 font-medium px-4 py-2 transition">
@@ -263,6 +225,31 @@
                 } else {
                     submitBtn.click();
                 }
+            }
+        });
+
+
+        
+        const sevRange = document.getElementById('severityRange');
+        const sevInput = document.getElementById('severityInput');
+        const sevMap = { "1": "Low", "2": "Medium", "3": "High", "4": "Critical" };
+        
+        sevRange.addEventListener('input', (e) => {
+            sevInput.value = sevMap[e.target.value];
+            // Update accent color
+            if (e.target.value === "1") e.target.classList.replace('accent-alertOrange', 'accent-blue-500');
+            else e.target.classList.remove('accent-blue-500');
+            
+            if (e.target.value === "2") e.target.classList.replace('accent-alertRed', 'accent-yellow-500');
+            else e.target.classList.remove('accent-yellow-500');
+            
+            if (e.target.value === "3") {
+                e.target.classList.remove('accent-blue-500', 'accent-yellow-500', 'accent-alertRed');
+                e.target.classList.add('accent-alertOrange');
+            }
+            if (e.target.value === "4") {
+                e.target.classList.remove('accent-blue-500', 'accent-yellow-500', 'accent-alertOrange');
+                e.target.classList.add('accent-alertRed');
             }
         });
 
