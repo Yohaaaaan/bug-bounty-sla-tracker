@@ -69,7 +69,7 @@ const escapeHTML = (str) => {
 };
 
 // Endpoint pour soumettre un rapport
-app.post('/api/reports', (req, res) => {
+app.post('/api/ledger', (req, res) => {
     const { 
         website_url, pow_challenge, pow_nonce 
     } = req.body;
@@ -175,7 +175,7 @@ app.delete('/api/admin/messages/:id', (req, res) => {
 
 
 // Endpoint public pour lister les rapports (affichage immédiat + moteur de recherche)
-app.get('/api/reports', (req, res) => {
+app.get('/api/ledger', (req, res) => {
     const searchQuery = req.query.search;
     let query = `SELECT * FROM reports WHERE is_hidden = 0`;
     let params = [];
@@ -203,7 +203,7 @@ app.get('/api/companies', (req, res) => {
 });
 
 // Endpoint pour les statistiques globales
-app.get('/api/stats', (req, res) => {
+app.get('/api/leaderboard', (req, res) => {
     db.all(`SELECT (SELECT COUNT(*) FROM reports WHERE is_hidden=0) as totalReports, (SELECT COUNT(DISTINCT company_name) FROM reports WHERE is_hidden=0) as totalCompanies`, (err, totals) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         db.all(`SELECT company_name, COUNT(*) as count FROM reports WHERE is_hidden=0 GROUP BY company_name ORDER BY count DESC LIMIT 10`, (err, companyStats) => {
@@ -226,7 +226,7 @@ app.get('/api/stats', (req, res) => {
 
 
 // Endpoint pour signaler un rapport (Downvote) avec PoW
-app.post('/api/reports/:id/flag', (req, res) => {
+app.post('/api/ledger/:id/flag', (req, res) => {
     const { id } = req.params;
     const { pow_challenge, pow_nonce } = req.body;
 

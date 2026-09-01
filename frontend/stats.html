@@ -147,7 +147,7 @@
         
         async function fetchStats() {
             try {
-                const res = await fetch('/api/stats');
+                const res = await fetch('/api/leaderboard');
                 const data = await res.json();
                 
                 // Fixed data bindings based on actual API response structure
@@ -220,7 +220,7 @@
             currentlyOpen = container;
 
             try {
-                const res = await fetch('/api/reports?search=' + encodeURIComponent(company));
+                const res = await fetch('/api/ledger?search=' + encodeURIComponent(company));
                 const reports = await res.json();
                 
                 let innerHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">';

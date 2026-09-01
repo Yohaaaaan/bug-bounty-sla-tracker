@@ -69,7 +69,7 @@
         let allReports = [];
         async function fetchAll() {
             try {
-                const res = await fetch('/api/reports');
+                const res = await fetch('/api/ledger');
                 allReports = await res.json();
                 renderAggregated(''); // Render top ones by default
             } catch(e) { console.error(e); }

@@ -28,7 +28,7 @@
 
                 const foundNonce = await compute();
                 
-                const res = await fetch(`/api/reports/${id}/flag`, {
+                const res = await fetch(`/api/ledger/${id}/flag`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ pow_challenge: challenge, pow_nonce: foundNonce })
@@ -161,7 +161,7 @@
 
         async function fetchReports(query = '') {
             try {
-                const res = await fetch(`/api/reports?search=${encodeURIComponent(query)}`);
+                const res = await fetch(`/api/ledger?search=${encodeURIComponent(query)}`);
                 const reports = await res.json();
                 const grid = document.getElementById('reportsGrid');
                 grid.innerHTML = '';
@@ -291,7 +291,7 @@
 
         async function loadGrowthFeatures() {
             try {
-                const res = await fetch('/api/stats');
+                const res = await fetch('/api/leaderboard');
                 const data = await res.json();
                 
                 // Wall of Shame
@@ -316,7 +316,7 @@
 
 
                 // FOMO Toasts (Latest Reports)
-                const resReports = await fetch('/api/reports');
+                const resReports = await fetch('/api/ledger');
                 const allReports = await resReports.json();
                 if(allReports.length > 0) {
                     

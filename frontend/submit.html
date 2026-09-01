@@ -415,7 +415,7 @@
                 payload.pow_challenge = challenge;
                 payload.pow_nonce = foundNonce;
 
-                const resSubmit = await fetch('/api/reports', {
+                const resSubmit = await fetch('/api/ledger', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
