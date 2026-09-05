@@ -5,7 +5,7 @@ const indexHtml = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bug Bounty SLA Tracker</title>
+    <title>SLAScan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -440,7 +440,7 @@ const aboutHtml = `<!DOCTYPE html>
         function shareSite() {
             if (navigator.share) {
                 navigator.share({
-                    title: 'Bug Bounty SLA Tracker',
+                    title: 'SLAScan',
                     text: 'Check out this community-driven tracker for Bug Bounty SLA delays and payment issues.',
                     url: window.location.origin
                 }).catch(console.error);

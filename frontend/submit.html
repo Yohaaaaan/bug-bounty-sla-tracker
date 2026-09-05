@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit a Report - Bug Bounty SLA Tracker</title>
+    <title>Submit a Report - SLAScan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -248,7 +248,7 @@
         function showStep(step) {
             
                     const company = document.getElementById('company_name').value || 'a company';
-                    const text = encodeURIComponent(`🚨 I just reported an unresolved SLA breach / ghosting for ${company}!\n\nWe demand transparency in Bug Bounty.\nCheck out the public ledger on Bug Bounty SLA Tracker:`);
+                    const text = encodeURIComponent(`🚨 I just reported an unresolved SLA breach / ghosting for ${company}!\n\nWe demand transparency in Bug Bounty.\nCheck out the public ledger on SLAScan:`);
                     const url = encodeURIComponent(window.location.origin);
                     document.getElementById('shareNewReportBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 
@@ -479,7 +479,7 @@
 
     <footer class="border-t border-gray-200 bg-white py-6 mt-10">
         <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">Bug Bounty SLA Tracker &copy; 2026. Community Driven.</p>
+            <p class="text-gray-500 text-sm">SLAScan &copy; 2026. Community Driven.</p>
             <div class="mt-2 flex justify-center items-center gap-4">
                 <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
                 <span class="text-gray-300">|</span>

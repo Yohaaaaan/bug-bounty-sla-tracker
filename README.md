@@ -1,8 +1,8 @@
-# 🚨 Bug Bounty SLA Tracker
+# 🚨 SLAScan
 
 Welcome to the **Resistance**.
 
-The **Bug Bounty SLA Tracker** is a community-driven, public ledger designed to bring transparency to the Bug Bounty ecosystem. Far too often, security researchers are met with ghosting, unjustified severity downgrades, and endless payout delays from major platforms and companies. 
+The **SLAScan** is a community-driven, public ledger designed to bring transparency to the Bug Bounty ecosystem. Far too often, security researchers are met with ghosting, unjustified severity downgrades, and endless payout delays from major platforms and companies. 
 
 We believe that our only weapon against these practices is **public visibility**. This platform tracks, aggregates, and shames bad actors based on community-submitted proofs.
 

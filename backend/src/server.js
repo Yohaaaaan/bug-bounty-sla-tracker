@@ -10,6 +10,13 @@ const multer = require('multer');
 const db = require('./database');
 
 const app = express();
+app.use((req, res, next) => {
+    if (req.hostname === 'bb-reports.duckdns.org') {
+        return res.redirect(301, 'http://slascan.duckdns.org' + req.originalUrl);
+    }
+    next();
+});
+
 app.set('trust proxy', 'loopback');
 const PORT = process.env.PORT || 3000;
 

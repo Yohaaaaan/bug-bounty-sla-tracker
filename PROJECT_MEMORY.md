@@ -1,4 +1,4 @@
-# Bug Bounty SLA Tracker - Project Memory
+# SLAScan - Project Memory
 
 ## Architecture & Tech Stack
 - **Frontend**: HTML5, TailwindCSS (via CDN), vanilla Javascript. Responsive UI with custom interactive CSS (e.g. Tailwind `peer` pseudo-classes for the severity cards).
