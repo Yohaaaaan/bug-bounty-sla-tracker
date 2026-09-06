@@ -523,7 +523,10 @@
             if (btn) btn.addEventListener('click', closeManifesto);
             
             const shareBtn = document.getElementById('manifestoShareBtn');
-            if (shareBtn) shareBtn.addEventListener('click', closeManifesto);
+            if (shareBtn) shareBtn.addEventListener('click', () => { closeManifesto(); if(window.trackEvent) window.trackEvent('share_x', 'manifesto'); });
+            
+            const wosShareBtn = document.getElementById('shareWosSidebarBtn');
+            if (wosShareBtn) wosShareBtn.addEventListener('click', () => { if(window.trackEvent) window.trackEvent('share_x', 'wall_of_shame'); });
             
             const backdrop = document.getElementById('manifestoBackdrop');
             if (backdrop) backdrop.addEventListener('click', closeManifesto);

@@ -537,6 +537,9 @@
 
         // Form Tracking
         document.addEventListener('DOMContentLoaded', () => {
+        const shareBtn = document.getElementById('shareNewReportBtn');
+        if (shareBtn) shareBtn.addEventListener('click', () => { if(window.trackEvent) window.trackEvent('share_x', 'new_report_success'); });
+
             const form = document.getElementById('reportForm');
             if (form) {
                 // Track focus on any input/select

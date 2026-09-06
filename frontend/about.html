@@ -120,7 +120,7 @@
     </main>
 
     <script>
-        document.getElementById("shareSiteBtn").addEventListener("click", shareSite);
+        document.getElementById("shareSiteBtn").addEventListener("click", () => { if(window.trackEvent) window.trackEvent("share", "about_page"); shareSite(); });
         function shareSite() {
             if (navigator.share) {
                 navigator.share({
@@ -192,5 +192,35 @@
         }
         document.addEventListener('DOMContentLoaded', loadPublicAnalytics);
     </script>
+
+    <!-- Granular Analytics & Privacy-first Telemetry -->
+    <script>
+        function getOrSetId(storage, key) {
+            let id = storage.getItem(key);
+            if (!id) {
+                id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                storage.setItem(key, id);
+            }
+            return id;
+        }
+        
+        const deviceId = getOrSetId(localStorage, 'slascan_did');
+        const sessionId = getOrSetId(sessionStorage, 'slascan_sid');
+
+        function trackEvent(actionType, actionDetail = null) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action_type: actionType,
+                    action_detail: actionDetail,
+                    device_id: deviceId,
+                    session_id: sessionId
+                })
+            }).catch(e => {});
+        }
+        window.trackEvent = trackEvent;
+    </script>
 </body>
+
 </html>
