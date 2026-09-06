@@ -25,3 +25,7 @@
 ## Known Limits & Next Steps
 - **HTTPS/SSL**: The domain is currently `http://`. A TLS certificate (Certbot/Let's Encrypt) would enable native browser WebCrypto and secure access.
 - **Git**: The project is not initialized as a git repository (`fatal: not a git repository`).
+
+## Extraction Rules (Discord Backfilling)
+- **Submission Date Logic**: When extracting reports from Discord dumps, calculate the `submission_date` using the formula: `[Date of the Discord message] - [Number of days specified in the message since the problem started]`. 
+- **Missing Data**: If the user does not specify how long the problem has been ongoing, DO NOT estimate or fallback to the current date. Set `submission_date` to `NULL` (or leave it out) so the frontend does not display "Unresolved for 0 days".

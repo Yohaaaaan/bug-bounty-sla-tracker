@@ -76,9 +76,7 @@
                 
 <div class="flex items-center space-x-6">
     <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
-    <a href="search.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Search</a>
-    <a href="stats.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Stats</a>
-    <a href="legal.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Legal</a>
+    <a href="about.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">About</a>
     
     <a href="https://github.com/Yohaaaaan/bug-bounty-sla-tracker" target="_blank" class="text-gray-600 hover:text-gray-900 transition flex items-center justify-center p-2 rounded-lg hover:bg-gray-100" title="Star us on GitHub">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
@@ -95,51 +93,88 @@
         <!-- Hero Section -->
         <div class="text-center mb-16 relative">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-alertOrange/20 blur-[100px] rounded-full pointer-events-none"></div>
-            <h1 class="text-5xl sm:text-6xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Transparency in Bug Bounty</h1>
-            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">Anonymous tracking of unresolved SLAs, ghosting, and payment issues. Driven by the community, secured by Proof-of-Work.</p>
+            <h1 class="text-5xl sm:text-6xl font-extrabold mb-6 pb-2 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">Transparency in Bug Bounty</h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed mb-8">Anonymous tracking of unresolved SLAs, ghosting, and payment issues. Driven by the community, secured by Proof-of-Work.</p>
+            
+            <a href="submit.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-alertOrange to-red-600 hover:from-orange-400 hover:to-red-500 text-gray-900 font-black py-2.5 px-6 rounded-xl shadow-[0_0_15px_rgba(255,153,0,0.3)] hover:shadow-[0_0_25px_rgba(255,153,0,0.5)] transition-all hover:-translate-y-0.5 text-base">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                Submit a New SLA Breach
+            </a>
         </div>
 
         
-        <!-- Wall of Shame -->
-        <div class="mb-12 bg-alertRed/5 border border-alertRed/20 p-6 rounded-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-10 text-alertRed">
-                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-            </div>
-            <h2 class="text-xl font-black text-alertRed uppercase tracking-wider mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                Wall of Shame (This Week)
-            </h2>
-            <div id="wallOfShameList" class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
-                <div class="text-sm text-gray-500 animate-pulse">Loading worst offenders...</div>
-            </div>
-            <div class="mt-6 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="submit.html" class="inline-flex items-center gap-2 bg-alertRed hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
-                    Submit a New SLA Breach
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                </a>
+        <!-- Dashboard: 2-column layout -->
+        <div class="flex flex-col lg:flex-row gap-6 relative z-10">
 
-                <a id="shareWosBtn" target="_blank" href="#" class="inline-flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-transform hover:scale-105">
-                    Share on X (Twitter)
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </a>
+            <!-- LEFT COLUMN: Top Enterprises + Stats -->
+            <div class="w-full lg:w-72 xl:w-80 flex-shrink-0 flex flex-col gap-4">
 
-            </div>
-        </div>
-
-        <!-- Search & Grid -->
-        <div class="space-y-6 relative z-10">
-            <div class="flex flex-col sm:flex-row justify-between items-end sm:items-center border-b border-gray-200 pb-4 mb-8 gap-4">
-                <h2 class="text-xl font-semibold text-gray-800">Latest Community Reports</h2>
-                
-                    <input type="text" id="searchInput" placeholder="Search by company..." class="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-3 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange transition backdrop-blur-sm">
+                <!-- Wall of Shame (Sidebar) -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-black text-alertRed uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Wall of Shame
+                        </h3>
+                        <div class="flex bg-gray-100 rounded-lg p-0.5">
+                            <button id="btnWosAll" class="px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition">All Time</button>
+                            <button id="btnWosWeek" class="px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition">Week</button>
+                        </div>
+                    </div>
+                    <div id="sidebarTopCompanies" class="space-y-2">
+                        <div class="text-xs text-gray-400 animate-pulse">Loading...</div>
+                    </div>
+                    
+                    <a id="shareWosSidebarBtn" target="_blank" href="#" class="mt-4 w-full inline-flex justify-center items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-xl transition text-xs shadow-md">
+                        Share on X
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
                 </div>
+
+                <!-- Global Stats Card -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">📊 Global Tracker Stats</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Total Reports</span>
+                            <span id="statTotalReports" class="text-xl font-black text-gray-900">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Companies Tracked</span>
+                            <span id="statCompanies" class="text-xl font-black text-gray-900">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Ghosting Cases</span>
+                            <span id="statGhosting" class="text-xl font-black text-alertRed">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Platforms Covered</span>
+                            <span id="statPlatforms" class="text-xl font-black text-gray-900">—</span>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
-            
-            <div id="reportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-10 text-gray-500">Loading reports...</div>
+
+            <!-- RIGHT COLUMN: Search + Reports -->
+            <div class="flex-1 min-w-0 flex flex-col gap-4">
+
+                <!-- Search Bar -->
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                    <input type="text" id="searchInput" placeholder="Search by company name, issue type…" class="w-full bg-white border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange transition shadow-sm">
+                </div>
+
+                <!-- Reports Grid -->
+                <div id="reportsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div class="col-span-full text-center py-10 text-gray-400 text-sm">Loading reports…</div>
+                </div>
             </div>
         </div>
     </main>
+
+
 
     <script>
         function timeAgo(dateString) {
@@ -159,130 +194,184 @@
         }
 
         function getSeverityColor(sev) {
-            if (sev === 'P1') return 'text-alertRed bg-alertRed/10 border-alertRed/20';
-            if (sev === 'P2') return 'text-alertOrange bg-alertOrange/10 border-alertOrange/20';
+            if (sev === 'Critical') return 'text-alertRed bg-alertRed/10 border-alertRed/20';
+            if (sev === 'High') return 'text-alertOrange bg-alertOrange/10 border-alertOrange/20';
             return 'text-gray-600 bg-white/5 border-gray-200';
+        }
+
+        let activeFilter = '';
+
+        function setFilter(f, el) {
+            activeFilter = f;
+            document.querySelectorAll('.filter-pill').forEach(btn => {
+                btn.classList.remove('bg-gray-900', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-600');
+            });
+            el.classList.add('bg-gray-900', 'text-white');
+            el.classList.remove('bg-white', 'text-gray-600');
+            fetchReports(document.getElementById('searchInput').value);
         }
 
         async function fetchReports(query = '') {
             try {
-                const res = await fetch(`/api/ledger?search=${encodeURIComponent(query)}`);
-                const reports = await res.json();
+                const res = await fetch(`/api/ledger?search=${encodeURIComponent(query)}&t=${Date.now()}`);
+                let reports = await res.json();
+                if (activeFilter) {
+                    if (activeFilter === 'Critical') {
+                        reports = reports.filter(r => r.severity === 'Critical');
+                    } else {
+                        reports = reports.filter(r => r.issue_type && r.issue_type.includes(activeFilter));
+                    }
+                }
                 const grid = document.getElementById('reportsGrid');
                 grid.innerHTML = '';
-                
                 if (reports.length === 0) {
-                    
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 px-4 bg-white rounded-2xl border border-gray-200 border-dashed">
-                        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    grid.innerHTML = `<div class="col-span-full text-center py-12 px-4 bg-white rounded-2xl border border-gray-200 border-dashed">
                         <h3 class="text-xl font-bold text-gray-900 mb-2">No reports found</h3>
                         <p class="text-gray-500 mb-6">Have you experienced SLA breaches or been ghosted by this company?</p>
                         <a href="submit.html" class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-6 rounded-xl transition shadow-lg">
-                            <svg class="w-5 h-5 text-alertRed" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
                             Be the first to report them!
                         </a>
-                    </div>
-                `;
-
+                    </div>`;
                     return;
                 }
-
                 reports.forEach(r => {
-                    // Decide accent color based on issue type
                     let accentColor = 'bg-gray-600';
                     let titleColor = 'text-gray-600';
-                    
                     if (r.issue_type.includes('Refusal') || r.issue_type.includes('Ghosting')) {
-                        accentColor = 'bg-alertRed shadow-sm';
-                        titleColor = 'text-alertRed';
+                        accentColor = 'bg-alertRed shadow-sm'; titleColor = 'text-alertRed';
                     } else if (r.issue_type.includes('Downgrade') || r.issue_type.includes('Delay')) {
-                        accentColor = 'bg-alertOrange shadow-sm';
-                        titleColor = 'text-alertOrange';
+                        accentColor = 'bg-alertOrange shadow-sm'; titleColor = 'text-alertOrange';
                     }
-
-                    
                     const subDate = r.submission_date ? new Date(r.submission_date) : null;
                     let durationText = '';
                     if (subDate && (r.issue_type.includes('Delay') || r.issue_type.includes('Ghosting'))) {
                         const days = Math.floor((new Date(r.created_at) - subDate) / (1000 * 60 * 60 * 24));
-                        durationText = `<p class="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-wide">⏳ Unresolved for ${days} days</p>`;
+                        if (days > 0) durationText = `<p class="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-wide">⏳ Unresolved for ${days} days</p>`;
                     }
-                    
                     grid.innerHTML += `
-    <div class="bg-white shadow-sm border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-md transition duration-200 relative overflow-hidden group flex flex-col justify-between">
-        <div class="absolute top-0 left-0 w-1 h-full ${accentColor} opacity-70 group-hover:opacity-100 transition"></div>
-        
-        <div class="pl-2 w-full">
-            <div class="flex justify-between items-start mb-1 gap-2">
-                <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight truncate" title="${r.company_name}">${r.company_name}</h3>
-                <span class="text-[10px] text-gray-400 font-medium whitespace-nowrap pt-1">${timeAgo(r.created_at)}</span>
+<div class="bg-white shadow-sm border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-md transition duration-200 relative overflow-hidden group flex flex-col justify-between">
+    <div class="absolute top-0 left-0 w-1 h-full ${accentColor} opacity-70 group-hover:opacity-100 transition"></div>
+    <div class="pl-2 w-full">
+        <div class="flex justify-between items-start mb-1 gap-2">
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight truncate" title="${r.company_name}">${r.company_name}</h3>
+            <span class="text-[10px] text-gray-400 font-medium whitespace-nowrap pt-1">${timeAgo(r.created_at)}</span>
+        </div>
+        <p class="${titleColor} font-semibold text-[12px] mb-1 leading-snug line-clamp-1" title="${r.issue_type}">${r.issue_type}</p>
+        ${durationText}
+        <div class="flex justify-between items-center text-xs pt-3 border-t border-gray-100 pl-2">
+            <div class="flex items-center gap-2">
+                ${r.severity && r.severity !== 'N/A' ? `<span class="px-2 py-0.5 rounded font-bold border ${getSeverityColor(r.severity)} text-[10px]">${r.severity}</span>` : '<div></div>'}
+                <button data-flag-id="${r.id}" title="Flag as fake/spam" class="text-gray-300 hover:text-red-500 transition flag-report-btn">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                </button>
             </div>
-            
-            <p class="${titleColor} font-semibold text-[12px] mb-1 leading-snug line-clamp-1" title="${r.issue_type}">${r.issue_type}</p>
-            ${durationText}
-            
-            <div class="flex justify-between items-center text-xs pt-3 border-t border-gray-100 pl-2">
-                <div class="flex items-center gap-2">
-                    ${r.severity && r.severity !== 'N/A' ? `<span class="px-2 py-0.5 rounded font-bold border ${getSeverityColor(r.severity)} text-[10px]">${r.severity}</span>` : '<div></div>'}
-                    <button onclick="flagReport('${r.id}')" title="Flag as fake/spam" class="text-gray-300 hover:text-red-500 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-                    </button>
-                </div>
-                <span class="bg-gray-50 text-gray-500 border border-gray-200 px-2 py-0.5 rounded uppercase tracking-wider font-bold text-[9px] truncate max-w-[100px] text-right" title="${r.platform || 'Unknown'}">${r.platform || 'Unknown'}</span>
-            </div>
+            <span class="bg-gray-50 text-gray-500 border border-gray-200 px-2 py-0.5 rounded uppercase tracking-wider font-bold text-[9px] truncate max-w-[100px] text-right" title="${r.platform || 'Unknown'}">${r.platform || 'Unknown'}</span>
         </div>
     </div>
-`;
+</div>`;
                 });
-            } catch (e) {
-                console.error(e);
-            }
+            } catch(e) { console.error(e); }
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            fetchReports(e.target.value);
-        });
+        let allReportsCache = [];
+        let wosCurrentFilter = 'all';
 
-        // Init
-        fetchReports();
-    </script>
+        async function loadSidebarStats() {
+            try {
+                const res = await fetch('/api/ledger?t=' + Date.now());
+                allReportsCache = await res.json();
+                
+                document.getElementById('statTotalReports').textContent = allReportsCache.length;
+                const companies = new Set(allReportsCache.map(r => r.company_name)).size;
+                document.getElementById('statCompanies').textContent = companies;
+                const ghosting = allReportsCache.filter(r => r.issue_type && r.issue_type.includes('Ghosting')).length;
+                document.getElementById('statGhosting').textContent = ghosting;
+                const platforms = new Set(allReportsCache.map(r => r.platform).filter(Boolean)).size;
+                document.getElementById('statPlatforms').textContent = platforms;
 
-    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">SLAScan &copy; 2026. Community Driven.</p>
-            <div class="mt-2 flex justify-center items-center gap-4">
-                <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
-                <span class="text-gray-300">|</span>
-                <a href="https://github.com/Yohaaaaan/bug-bounty-sla-tracker" target="_blank" class="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg> Open Source</a>
-            </div>
-        </div>
-    </footer>
+                renderWos(wosCurrentFilter);
+            } catch(e) { console.error(e); }
+        }
 
-    <!-- Privacy-respecting Analytics -->
-    <script>
-        fetch('/api/ping', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: window.location.pathname || '/' })
-        }).catch(e => {});
-    </script>
+        function setWosFilter(filter) {
+            console.log("[WOS] Toggling filter to:", filter);
+            wosCurrentFilter = filter;
+            
+            try {
+                if (filter === 'week') {
+                    document.getElementById('btnWosWeek').className = 'px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition';
+                    document.getElementById('btnWosAll').className = 'px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition';
+                } else {
+                    document.getElementById('btnWosAll').className = 'px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition';
+                    document.getElementById('btnWosWeek').className = 'px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition';
+                }
+            } catch(e) { console.error("[WOS] Error changing button classes", e); }
+            
+            renderWos(filter);
+        }
 
-    <!-- FOMO Toast Notification -->
-    <div id="fomoToast" class="fixed bottom-4 right-4 bg-gray-900 text-white p-4 rounded-xl shadow-2xl transform translate-y-full opacity-0 transition-all duration-500 z-50 flex items-start gap-3 max-w-sm pointer-events-none">
-        <div class="bg-alertRed/20 p-2 rounded-full text-alertRed mt-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-        </div>
-        <div>
-            <p id="fomoText" class="text-sm font-medium leading-snug">Someone just submitted a report for <span id="fomoCompany" class="font-bold text-alertOrange">Company</span>!</p>
-            <p id="fomoTime" class="text-xs text-gray-400 mt-1">Just now</p>
-        </div>
-    </div>
+        function renderWos(filter) {
+            console.log("[WOS] Rendering with filter:", filter, "Cache length:", allReportsCache.length);
+            if (!allReportsCache || !allReportsCache.length) return;
+            
+            let dataset = allReportsCache;
+            if (filter === 'week') {
+                const latestDate = allReportsCache[0] && allReportsCache[0].created_at ? new Date(allReportsCache[0].created_at).getTime() : Date.now();
+                const sevenDaysAgo = (isNaN(latestDate) ? Date.now() : latestDate) - (7 * 24 * 60 * 60 * 1000);
+                dataset = allReportsCache.filter(r => {
+                    const t = new Date(r.created_at).getTime();
+                    return !isNaN(t) && t >= sevenDaysAgo;
+                });
+                console.log("[WOS] Week dataset length:", dataset.length);
+            }
 
+            const counts = {};
+            dataset.forEach(r => { 
+                if(r.company_name) counts[r.company_name] = (counts[r.company_name] || 0) + 1; 
+            });
+            const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8);
+            console.log("[WOS] Top companies:", top);
+            
+            if (top.length === 0) {
+                document.getElementById('sidebarTopCompanies').innerHTML = `<div class="text-xs text-gray-400 italic">No reports this week.</div>`;
+                document.getElementById('shareWosSidebarBtn').style.display = 'none';
+                return;
+            }
 
-<script>
-        
-                function formatTimeAgo(dateString) {
+            document.getElementById('shareWosSidebarBtn').style.display = 'inline-flex';
+            
+            const medals = ['🥇','🥈','🥉'];
+            const maxCount = Math.max(...top.map(t => t[1]));
+            
+            try {
+                document.getElementById('sidebarTopCompanies').innerHTML = top.map(([name, count], i) => {
+                    const percent = Math.max(5, (count / maxCount) * 100);
+                    return `
+                    <div class="group cursor-pointer mb-3 last:mb-0 wos-company-row" data-company="${name.replace(/'/g, "&apos;")}">
+                        <div class="flex justify-between items-end mb-1 px-1">
+                            <span class="text-base font-bold text-gray-900 flex items-center gap-1.5 truncate max-w-[150px] group-hover:text-alertRed transition" title="${name}">
+                                <span>${medals[i] || '▸'}</span> <span class="truncate">${name}</span>
+                            </span>
+                            <span class="text-xs font-black text-gray-500 group-hover:text-alertRed transition">${count}</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-alertRed h-1.5 rounded-full transition-all duration-500 ease-out" style="width: ${percent}%"></div>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                // Update Twitter Share link dynamically
+                const top3 = top.slice(0, 3);
+                const names = top3.map(([n, c], i) => `${medals[i] || '▸'} ${n}`).join('\n');
+                const periodText = filter === 'week' ? "This week's" : "All-time";
+                const text = encodeURIComponent(`🚨 ${periodText} SLAScan Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on SLAScan:`);
+                const url = encodeURIComponent(window.location.origin);
+                document.getElementById('shareWosSidebarBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            } catch(e) { console.error("[WOS] Error updating DOM", e); }
+        }
+
+        function formatTimeAgo(dateString) {
             const date = new Date(dateString);
             const seconds = Math.floor((new Date() - date) / 1000);
             if (seconds < 60) return seconds + 's ago';
@@ -290,67 +379,60 @@
             if (minutes < 60) return minutes + 'm ago';
             const hours = Math.floor(minutes / 60);
             if (hours < 24) return hours + 'h ago';
-            const days = Math.floor(hours / 24);
-            return days + 'd ago';
+            return Math.floor(hours / 24) + 'd ago';
         }
 
         async function loadGrowthFeatures() {
             try {
-                const res = await fetch('/api/leaderboard');
-                const data = await res.json();
-                
-                // Wall of Shame
-                const top3 = data.weeklyCompanyStats && data.weeklyCompanyStats.length > 0 ? data.weeklyCompanyStats : data.companyStats.slice(0, 3);
-                let wosHtml = '';
-                top3.forEach((c, i) => {
-                    wosHtml += `
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center cursor-pointer hover:border-alertRed transition" onclick="document.getElementById('searchInput').value='${c.company_name}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
-                            <span class="text-3xl mb-1">${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
-                            <h3 class="font-bold text-gray-900">${c.company_name}</h3>
-                            <span class="text-xs font-black text-alertRed bg-alertRed/10 px-2 py-0.5 rounded-full mt-1">${c.count} Breaches</span>
-                        </div>
-                    `;
-                });
-                document.getElementById('wallOfShameList').innerHTML = wosHtml;
-
-                // Generate Share Link
-                const names = top3.map((c, i) => `${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} ${c.company_name}`).join('\n');
-                const text = encodeURIComponent(`🚨 This week's SLAScan Wall of Shame!\n\n${names}\n\nCheck out the proofs and report unresolved SLAs on SLAScan:`);
-                const url = encodeURIComponent(window.location.origin);
-                document.getElementById('shareWosBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-
-
-                // FOMO Toasts (Latest Reports)
-                const resReports = await fetch('/api/ledger');
-                const allReports = await resReports.json();
-                if(allReports.length > 0) {
-                    
-                    const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-                    let recent = allReports.filter(r => new Date(r.created_at) > seventyTwoHoursAgo).slice(0, 5);
-                    if (recent.length === 0) recent = allReports.slice(0, 2); // fallback if none are recent
-        
-                    let fomoIndex = 0;
-                    
-                    setInterval(() => {
-                        const r = recent[fomoIndex];
-                        document.getElementById('fomoCompany').innerText = r.company_name;
-                        document.getElementById('fomoText').innerHTML = `New <strong>${r.issue_type}</strong> reported for <span class="font-bold text-alertOrange">${r.company_name}</span>!`;
-                        document.getElementById('fomoTime').innerText = formatTimeAgo(r.created_at);
-                        
-                        const toast = document.getElementById('fomoToast');
-                        toast.classList.remove('translate-y-full', 'opacity-0');
-                        
-                        setTimeout(() => {
-                            toast.classList.add('translate-y-full', 'opacity-0');
-                            fomoIndex = (fomoIndex + 1) % recent.length;
-                        }, 5000);
-                        
-                    }, 60000); // Trigger every 60 seconds
-                }
+                if (!allReportsCache || allReportsCache.length === 0) return;
+                const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+                let recent = allReportsCache.filter(r => new Date(r.created_at) > seventyTwoHoursAgo).slice(0, 5);
+                if (recent.length === 0) recent = allReportsCache.slice(0, 2);
+                let fomoIndex = 0;
+                setInterval(() => {
+                    const r = recent[fomoIndex];
+                    document.getElementById('fomoCompany').innerText = r.company_name;
+                    document.getElementById('fomoText').innerHTML = `New <strong>${r.issue_type}</strong> reported for <span class="font-bold text-alertOrange">${r.company_name}</span>!`;
+                    document.getElementById('fomoTime').innerText = formatTimeAgo(r.created_at);
+                    const toast = document.getElementById('fomoToast');
+                    toast.classList.remove('translate-y-full', 'opacity-0');
+                    setTimeout(() => {
+                        toast.classList.add('translate-y-full', 'opacity-0');
+                        fomoIndex = (fomoIndex + 1) % recent.length;
+                    }, 5000);
+                }, 60000);
             } catch(e) { console.error(e); }
         }
+
+        
+        document.getElementById('sidebarTopCompanies').addEventListener('click', (e) => {
+            const row = e.target.closest('.wos-company-row');
+            if (row) {
+                const company = row.getAttribute('data-company');
+                if (company) {
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = company;
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            }
+        });
+
+        document.getElementById('btnWosAll').addEventListener('click', () => setWosFilter('all'));
+        document.getElementById('btnWosWeek').addEventListener('click', () => setWosFilter('week'));
+        document.getElementById('searchInput').addEventListener('input', e => fetchReports(e.target.value));
+        
+        document.getElementById('reportsGrid').addEventListener('click', (e) => {
+            const btn = e.target.closest('.flag-report-btn');
+            if (btn) {
+                const id = btn.getAttribute('data-flag-id');
+                if (id) flagReport(id);
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', loadGrowthFeatures);
-</script>
+        fetchReports();
+        loadSidebarStats();
+    </script>
 
 
     <!-- Community Manifesto Modal -->
@@ -449,5 +531,43 @@
 
     </script>
 
+    <!-- Granular Analytics & Privacy-first Telemetry -->
+    <script>
+        function getOrSetId(storage, key) {
+            let id = storage.getItem(key);
+            if (!id) {
+                id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                storage.setItem(key, id);
+            }
+            return id;
+        }
+        
+        const deviceId = getOrSetId(localStorage, 'slascan_did');
+        const sessionId = getOrSetId(sessionStorage, 'slascan_sid');
+
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                path: window.location.pathname || '/',
+                device_id: deviceId,
+                session_id: sessionId
+            })
+        }).catch(e => {});
+
+        function trackEvent(actionType, actionDetail = null) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action_type: actionType,
+                    action_detail: actionDetail,
+                    device_id: deviceId,
+                    session_id: sessionId
+                })
+            }).catch(e => {});
+        }
+        window.trackEvent = trackEvent;
+    </script>
 </body>
 </html>

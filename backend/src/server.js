@@ -12,7 +12,7 @@ const db = require('./database');
 const app = express();
 app.use((req, res, next) => {
     if (req.hostname === 'bb-reports.duckdns.org') {
-        return res.redirect(301, 'http://slascan.duckdns.org' + req.originalUrl);
+        return res.redirect(301, 'https://slascan.duckdns.org' + req.originalUrl);
     }
     next();
 });
@@ -225,6 +225,15 @@ app.get('/api/ledger', (req, res) => {
 
     db.all(query, params, (err, rows) => {
         if (err) return res.status(500).json({ error: 'Database error' });
+        
+        // Safari/Firefox compat
+        rows = rows.map(r => {
+            if (r.created_at && r.created_at.includes(' ') && !r.created_at.includes('T')) {
+                r.created_at = r.created_at.replace(' ', 'T') + 'Z';
+            }
+            return r;
+        });
+        
         res.json(rows);
     });
 });
@@ -289,7 +298,7 @@ app.post('/api/ledger/:id/flag', (req, res) => {
 
 // Privacy-respecting Analytics Ping
 app.post('/api/ping', (req, res) => {
-    const { path } = req.body;
+    const { path, device_id, session_id } = req.body;
     if (!path || typeof path !== 'string' || !path.startsWith('/') || path.length > 100) return res.status(400).send();
     const cleanPath = path.replace(/[^a-zA-Z0-9/.-]/g, ''); // Validate path against XSS
     const secret = process.env.ANALYTICS_SECRET || 'fallback-secret';
@@ -297,21 +306,42 @@ app.post('/api/ping', (req, res) => {
     const salt = new Date().toISOString().slice(0, 10); 
     const visitor_hash = crypto.createHmac('sha256', secret).update(ip + salt).digest('hex').substring(0, 16);
     
-    db.run('INSERT INTO analytics (path, visitor_hash) VALUES (?, ?)', [cleanPath, visitor_hash], (err) => {
+    db.run('INSERT INTO analytics (path, visitor_hash, device_id, session_id) VALUES (?, ?, ?, ?)', [cleanPath, visitor_hash, device_id || null, session_id || null], (err) => {
+        if (err) console.error(err);
+        res.status(200).send();
+    });
+});
+
+app.post('/api/track', (req, res) => {
+    const { action_type, action_detail, device_id, session_id } = req.body;
+    if (!action_type || typeof action_type !== 'string' || action_type.length > 50) return res.status(400).send();
+    
+    const secret = process.env.ANALYTICS_SECRET || 'fallback-secret';
+    const ip = req.ip || req.socket.remoteAddress;
+    const salt = new Date().toISOString().slice(0, 10); 
+    const visitor_hash = crypto.createHmac('sha256', secret).update(ip + salt).digest('hex').substring(0, 16);
+    
+    const safeDetail = action_detail ? String(action_detail).substring(0, 200) : null;
+    
+    db.run('INSERT INTO action_logs (visitor_hash, device_id, session_id, action_type, action_detail) VALUES (?, ?, ?, ?, ?)',
+        [visitor_hash, device_id || null, session_id || null, action_type, safeDetail], (err) => {
         if (err) console.error(err);
         res.status(200).send();
     });
 });
 
 app.get('/api/admin/analytics', (req, res) => {
-    // Return simple stats: total views, unique visitors today, popular pages
+    // Return stats: total views, unique visitors all-time, unique this week per page
     db.all(`
         SELECT 
-            path, 
+            CASE WHEN path = '/index.html' THEN '/' ELSE path END as path, 
             COUNT(*) as views, 
-            COUNT(DISTINCT visitor_hash) as uniques 
+            COUNT(DISTINCT visitor_hash) as uniques,
+            SUM(CASE WHEN created_at >= datetime('now', '-7 days') THEN 1 ELSE 0 END) as views_this_week,
+            COUNT(DISTINCT CASE WHEN created_at >= datetime('now', '-7 days') THEN visitor_hash END) as unique_this_week,
+            COUNT(DISTINCT CASE WHEN created_at >= datetime('now', 'start of day') THEN visitor_hash END) as unique_today
         FROM analytics 
-        GROUP BY path 
+        GROUP BY CASE WHEN path = '/index.html' THEN '/' ELSE path END 
         ORDER BY views DESC
     `, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });

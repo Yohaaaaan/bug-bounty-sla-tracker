@@ -264,14 +264,21 @@
                 prevBtn.classList.add('hidden');
                 nextBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Next Step';
             } else if (step === 4) {
                 prevBtn.classList.remove('hidden');
                 nextBtn.classList.add('hidden');
                 submitBtn.classList.remove('hidden');
+            } else if (step === 3) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Last Step →';
             } else {
                 prevBtn.classList.remove('hidden');
                 nextBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Next Step';
             }
         }
 
@@ -481,20 +488,85 @@
         <div class="max-w-6xl mx-auto px-4 text-center">
             <p class="text-gray-500 text-sm">SLAScan &copy; 2026. Community Driven.</p>
             <div class="mt-2 flex justify-center items-center gap-4">
-                <a href="legal.html" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
+                <a href="about.html#legal" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy & Terms</a>
                 <span class="text-gray-300">|</span>
                 <a href="https://github.com/Yohaaaaan/bug-bounty-sla-tracker" target="_blank" class="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg> Open Source</a>
             </div>
         </div>
     </footer>
 
-    <!-- Privacy-respecting Analytics -->
+    <!-- Granular Analytics & Privacy-first Telemetry -->
     <script>
+        // Anonymous ID management
+        function getOrSetId(storage, key) {
+            let id = storage.getItem(key);
+            if (!id) {
+                id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                storage.setItem(key, id);
+            }
+            return id;
+        }
+        
+        const deviceId = getOrSetId(localStorage, 'slascan_did');
+        const sessionId = getOrSetId(sessionStorage, 'slascan_sid');
+
+        // Core Pageview Ping
         fetch('/api/ping', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: window.location.pathname || '/' })
+            body: JSON.stringify({ 
+                path: window.location.pathname || '/',
+                device_id: deviceId,
+                session_id: sessionId
+            })
         }).catch(e => {});
+
+        // Granular Tracker
+        function trackEvent(actionType, actionDetail = null) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action_type: actionType,
+                    action_detail: actionDetail,
+                    device_id: deviceId,
+                    session_id: sessionId
+                })
+            }).catch(e => {});
+        }
+
+        // Form Tracking
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('reportForm');
+            if (form) {
+                // Track focus on any input/select
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => {
+                        trackEvent('form_focus', input.name || input.id);
+                    }, { once: true }); 
+                    
+                    input.addEventListener('blur', () => {
+                        if (input.value && input.value.trim() !== '') {
+                            // Pour protéger la vie privée et la sécurité, on ne loggue pas les preuves en clair avant soumission
+                            if (input.type === 'file') return trackEvent('form_filled', `${input.name || input.id}: [FILE]`);
+                            if ((input.name || input.id).includes('proof')) return trackEvent('form_filled', `${input.name || input.id}: [LINK]`);
+                            
+                            trackEvent('form_value', `${input.name || input.id}: ${input.value.substring(0, 100)}`);
+                        }
+                    });
+                });
+                
+                // Track PoW button clicks specifically
+                const powBtn = document.getElementById('powBtn');
+                if (powBtn) {
+                    powBtn.addEventListener('click', () => trackEvent('pow_start', 'clicked_pow_btn'));
+                }
+            }
+        });
+
+        // Expose trackEvent globally so the existing submit handler can call it
+        window.trackEvent = trackEvent;
     </script>
 </body>
 </html>
