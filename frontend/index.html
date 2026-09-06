@@ -419,7 +419,16 @@
 
         document.getElementById('btnWosAll').addEventListener('click', () => setWosFilter('all'));
         document.getElementById('btnWosWeek').addEventListener('click', () => setWosFilter('week'));
-        document.getElementById('searchInput').addEventListener('input', e => fetchReports(e.target.value));
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', e => {
+            fetchReports(e.target.value);
+            clearTimeout(searchTimeout);
+            if (e.target.value.trim().length > 1) {
+                searchTimeout = setTimeout(() => {
+                    if (window.trackEvent) window.trackEvent('search', e.target.value.trim());
+                }, 1000);
+            }
+        });
         
         document.getElementById('reportsGrid').addEventListener('click', (e) => {
             const btn = e.target.closest('.flag-report-btn');
