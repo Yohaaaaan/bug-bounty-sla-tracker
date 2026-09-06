@@ -117,8 +117,8 @@
                             Wall of Shame
                         </h3>
                         <div class="flex bg-gray-100 rounded-lg p-0.5">
-                            <button onclick="setWosFilter('all')" id="btnWosAll" class="px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition">All Time</button>
-                            <button onclick="setWosFilter('week')" id="btnWosWeek" class="px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition">Week</button>
+                            <button id="btnWosAll" class="px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition">All Time</button>
+                            <button id="btnWosWeek" class="px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition">Week</button>
                         </div>
                     </div>
                     <div id="sidebarTopCompanies" class="space-y-2">
@@ -388,6 +388,8 @@
             } catch(e) { console.error(e); }
         }
 
+        document.getElementById('btnWosAll').addEventListener('click', () => setWosFilter('all'));
+        document.getElementById('btnWosWeek').addEventListener('click', () => setWosFilter('week'));
         document.getElementById('searchInput').addEventListener('input', e => fetchReports(e.target.value));
         document.addEventListener('DOMContentLoaded', loadGrowthFeatures);
         fetchReports();
