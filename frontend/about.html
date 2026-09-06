@@ -159,7 +159,7 @@
         async function loadPublicAnalytics() {
             try {
                 const res = await fetch('/api/admin/analytics');
-                if (!res.ok) return;
+                if (!res.ok) { document.getElementById('analyticsBody').innerHTML = '<tr><td colspan="4" class="text-center py-6 text-red-500">Too many requests. Please wait a moment and refresh.</td></tr>'; return; }
                 const rows = await res.json();
                 const tbody = document.getElementById('analyticsBody');
                 tbody.innerHTML = '';

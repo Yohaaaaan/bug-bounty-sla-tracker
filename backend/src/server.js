@@ -61,7 +61,7 @@ const upload = multer({
 // Rate limiting strict par IP
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 30, // limiter chaque IP à 10 requêtes par fenêtre
+    max: 300, // limiter chaque IP à 10 requêtes par fenêtre
     message: 'Trop de requêtes, veuillez réessayer plus tard.'
 });
 app.use('/api/', limiter);
