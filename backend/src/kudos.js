@@ -115,7 +115,13 @@ function registerKudosRoutes({ app, db, crypto, uuidv4, upload, escapeHTML }) {
         const bounty_category = escapeHTML(req.body.bounty_category);
         const platform = escapeHTML(req.body.platform);
         const company_name = escapeHTML(req.body.company_name);
-        const highlight_type = escapeHTML(req.body.highlight_type);
+        
+        let raw_highlight = req.body.highlight_type;
+        if (!raw_highlight) return res.status(400).json({ error: 'Champs obligatoires manquants.' });
+        // Handle array before escapeHTML destroys it
+        if (Array.isArray(raw_highlight)) raw_highlight = raw_highlight.join(',');
+        
+        const highlight_type = escapeHTML(raw_highlight);
         const severity = escapeHTML(req.body.severity);
         const submission_date = escapeHTML(req.body.submission_date);
         const resolution_date = escapeHTML(req.body.resolution_date);
@@ -126,6 +132,8 @@ function registerKudosRoutes({ app, db, crypto, uuidv4, upload, escapeHTML }) {
 
         const graded = gradeSubmission({ highlight_type, submission_date, resolution_date });
         if (graded.error) return res.status(400).json({ error: graded.error });
+        // override highlight_type with the nicely formatted joined string
+        const final_highlight_type = graded.valid_types;
 
         let awarded_bounty = null;
         if (req.body.awarded_bounty !== undefined && req.body.awarded_bounty !== '') {
@@ -144,7 +152,7 @@ function registerKudosRoutes({ app, db, crypto, uuidv4, upload, escapeHTML }) {
                 INSERT INTO kudos (id, bounty_category, platform, company_name, highlight_type, severity, submission_date, resolution_date, elapsed_days, context, proof_url, awarded_bounty)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
-            db.run(query, [id, bounty_category, platform, company_name, highlight_type, severity, submission_date, resolution_date, graded.elapsed_days, context, proof_url, awarded_bounty], function (err) {
+            db.run(query, [id, bounty_category, platform, company_name, final_highlight_type, severity, submission_date, resolution_date, graded.elapsed_days, context, proof_url, awarded_bounty], function (err) {
                 if (err) return res.status(500).json({ error: 'Erreur.' });
                 res.status(201).json({ message: 'Success', id, elapsed_days: graded.elapsed_days });
             });

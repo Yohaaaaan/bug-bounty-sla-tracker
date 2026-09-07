@@ -151,23 +151,23 @@
                     <label class="block text-sm font-medium text-gray-600 mb-3">4. Highlight</label>
                     <div class="space-y-3">
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="highlight_type" value="Fast Triage" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <input type="checkbox" name="highlight_type" value="Fast Triage" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-800">Fast Triage (< 7 days)</span>
                         </label>
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="highlight_type" value="Fast Resolution / Payout" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <input type="checkbox" name="highlight_type" value="Fast Resolution / Payout" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-800">Fast Resolution / Payout (< 30 days)</span>
                         </label>
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="highlight_type" value="Consistent Communication" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <input type="checkbox" name="highlight_type" value="Consistent Communication" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-800">Consistent Communication</span>
                         </label>
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="highlight_type" value="Fair Severity Assessment" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <input type="checkbox" name="highlight_type" value="Fair Severity Assessment" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-800">Fair Severity Assessment</span>
                         </label>
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="highlight_type" value="Bounty Paid As Scoped" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <input type="checkbox" name="highlight_type" value="Bounty Paid As Scoped" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-800">Bounty Paid As Scoped</span>
                         </label>
                     </div>
@@ -610,7 +610,13 @@
                     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
                     
                     // Hide Header and Footer to avoid confusion
-                    document.querySelector('.mb-8.flex.justify-between').style.display = 'none';
+                    const oldHeader = document.querySelector('.mb-8.flex.justify-between');
+                    if (oldHeader) oldHeader.style.display = 'none';
+                    const wizHeader = document.getElementById('wizardHeader');
+                    if (wizHeader) wizHeader.style.display = 'none';
+                    const navControls = document.getElementById('navControls');
+                    if (navControls) navControls.style.display = 'none';
+                    
                     document.getElementById('prevBtn').style.display = 'none';
                     document.getElementById('nextBtn').style.display = 'none';
                     document.getElementById('submitBtn').style.display = 'none';
