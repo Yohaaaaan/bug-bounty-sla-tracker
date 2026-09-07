@@ -264,55 +264,100 @@
 
     <script>
         
-        let currentStep = 1;
-        const totalSteps = 4;
+        
+        let currentStep = 0; // 0 = Mode Selection
+        let mode = null; // 'breach' or 'kudos'
+        const totalSteps = 5; // 0, 1, 2, 3, 4(success)
+        
         const form = document.getElementById('reportForm');
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
         const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const navTitle = document.getElementById('navTitle');
+        const navBack = document.getElementById('navBack');
         
-        const titles = ["Step 1: The Target", "Step 2: The Issue", "Step 3: The Impact", "Step 4: Context & Evidence"];
-        const descs = ["Identify the company and platform.", "What exactly went wrong?", "Rate the severity and timeline.", "Provide context and proofs."];
-
-        function showStep(step) {
+        window.setMode = function(selectedMode) {
+            mode = selectedMode;
             
-                    const company = document.getElementById('company_name').value || 'a company';
-                    const text = encodeURIComponent(`🚨 I just reported an unresolved SLA breach / ghosting for ${company}!\n\nWe demand transparency in Bug Bounty.\nCheck out the public ledger on SLAScan:`);
-                    const url = encodeURIComponent(window.location.origin);
-                    document.getElementById('shareNewReportBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-
-                    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-            document.getElementById('step' + step).classList.add('active');
-            
-            document.getElementById('progressBar').style.width = ((step / totalSteps) * 100) + '%';
-            document.getElementById('stepIndicator').innerText = step;
-            document.getElementById('stepTitle').innerText = titles[step-1];
-            document.getElementById('stepDesc').innerText = descs[step-1];
-
-            if (step === 1) {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
-                nextBtn.innerText = 'Next Step';
-            } else if (step === 4) {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.add('hidden');
-                submitBtn.classList.remove('hidden');
-            } else if (step === 3) {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
-                nextBtn.innerText = 'Last Step →';
+            if (mode === 'breach') {
+                progressBar.className = 'h-full bg-gradient-to-r from-alertOrange to-red-500 transition-all duration-300';
+                navTitle.className = 'font-semibold text-alertOrange text-sm tracking-wide uppercase';
+                navTitle.innerText = 'Report SLA Breach';
+                navBack.href = 'index.html';
+                
+                document.getElementById('breachIssues').classList.remove('hidden');
+                document.getElementById('kudosIssues').classList.add('hidden');
+                
+                document.getElementById('resolutionDateBox').classList.add('hidden');
+                document.getElementById('resolution_date').required = false;
+                
+                document.getElementById('bountyLabel').innerText = '7. Expected Bounty';
+                document.getElementById('bountyHint').innerText = 'How much were you expecting?';
+                document.getElementById('expectedBounty').name = 'expected_bounty';
             } else {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
-                nextBtn.innerText = 'Next Step';
+                progressBar.className = 'h-full bg-gradient-to-r from-emerald-400 to-alertGreen transition-all duration-300';
+                navTitle.className = 'font-semibold text-alertGreen text-sm tracking-wide uppercase';
+                navTitle.innerText = 'Credit a Program';
+                navBack.href = 'hall-of-fame.html';
+                
+                document.getElementById('breachIssues').classList.add('hidden');
+                document.getElementById('kudosIssues').classList.remove('hidden');
+                
+                document.getElementById('resolutionDateBox').classList.remove('hidden');
+                document.getElementById('resolution_date').required = true;
+                
+                document.getElementById('bountyLabel').innerText = '7. Bounty Actually Paid';
+                document.getElementById('bountyHint').innerText = 'Enter 0 if there was no payout.';
+                document.getElementById('expectedBounty').name = 'awarded_bounty';
+            }
+            
+            document.getElementById('wizardHeader').style.display = 'flex';
+            document.getElementById('navControls').style.display = 'flex';
+            
+            currentStep = 1;
+            showStep(currentStep);
+        };
+        
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach((el, index) => {
+                if(el.id === 'step' + step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // Adjust progress bar
+            const percentage = step === 0 ? 0 : ((step) / (totalSteps - 2)) * 100;
+            progressBar.style.width = Math.min(percentage, 100) + '%';
+            
+            if (step === 0) {
+                document.getElementById('wizardHeader').style.display = 'none';
+                document.getElementById('navControls').style.display = 'none';
+                if(navTitle) {
+                    navTitle.innerText = 'Secure Submission';
+                    navTitle.className = 'font-semibold text-gray-900 text-sm tracking-wide uppercase';
+                }
+            } else {
+                if (step === 1) {
+                    prevBtn.style.display = 'none'; // Replaced by a custom "Back to mode" or we just hide it
+                } else {
+                    prevBtn.style.display = 'block';
+                }
+                
+                if (step === totalSteps - 2) { // Step 3
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                    nextBtn.innerText = step === totalSteps - 3 ? 'Last Step →' : 'Next Step';
+                }
             }
         }
-
+        
         nextBtn.addEventListener('click', () => {
-            // Validate current step
             const currentStepEl = document.getElementById('step' + currentStep);
             const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
             let valid = true;
@@ -322,15 +367,19 @@
                     valid = false;
                 }
             });
-            if (valid && currentStep < totalSteps) {
+            if (valid && currentStep < totalSteps - 2) {
                 currentStep++;
                 showStep(currentStep);
             }
         });
-
+        
         prevBtn.addEventListener('click', () => {
             if (currentStep > 1) {
                 currentStep--;
+                showStep(currentStep);
+            } else {
+                // Return to mode selection
+                currentStep = 0;
                 showStep(currentStep);
             }
         });
@@ -522,7 +571,8 @@
                 formData.append('pow_challenge', challenge);
                 formData.append('pow_nonce', foundNonce);
 
-                const resSubmit = await fetch('/api/ledger', {
+                const endpoint = mode === 'kudos' ? '/api/kudos' : '/api/ledger';
+                const resSubmit = await fetch(endpoint, {
                     method: 'POST',
                     body: formData
                 });
