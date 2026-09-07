@@ -539,18 +539,28 @@
                 const subDate = new Date(formData.get('submission_date'));
                 const daysDiff = (new Date() - subDate) / (1000 * 60 * 60 * 24);
 
-                if (issueType.includes('Ghosting') && daysDiff < 14) {
-                    alert('Error: For "Ghosting", the initial submission date must be at least 14 days ago.');
-                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                if (mode === 'breach' && issueType) {
+                    if (issueType.includes('Ghosting') && daysDiff < 14) {
+                        alert('Error: For "Ghosting", the initial submission date must be at least 14 days ago.');
+                        btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                    }
+                    if (issueType.includes('Response Delay') && daysDiff < 7) {
+                        alert('Error: For a "Response Delay", the submission must be at least 7 days old.');
+                        btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                    }
+                    if (issueType.includes('Resolution Delay') && daysDiff < 30) {
+                        alert('Error: For a "Resolution Delay", the submission must be at least 30 days old.');
+                        btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                    }
                 }
-                if (issueType.includes('Response Delay') && daysDiff < 7) {
-                    alert('Error: For a "Response Delay", the submission must be at least 7 days old.');
-                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
+                
+                // Hide bounty if user selected "Do not disclose"
+                const hideBounty = document.getElementById('hideBounty');
+                if (hideBounty && hideBounty.checked) {
+                    formData.delete('expected_bounty');
+                    formData.delete('awarded_bounty');
                 }
-                if (issueType.includes('Resolution Delay') && daysDiff < 30) {
-                    alert('Error: For a "Resolution Delay", the submission must be at least 30 days old.');
-                    btn.disabled = false; btn.innerText = 'Submit Report'; return;
-                }
+
 
                 const resChallenge = await fetch('/api/pow-challenge');
                 const { challenge, difficulty } = await resChallenge.json();
