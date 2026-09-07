@@ -149,6 +149,10 @@
                     <div id="sidebarTopFame" class="space-y-2">
                         <div class="text-xs text-gray-400 animate-pulse">Loading...</div>
                     </div>
+                    <a id="shareFameSidebarBtn" target="_blank" href="#" class="mt-4 w-full inline-flex justify-center items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-xl transition text-xs shadow-md" style="display: none;">
+                        Share on X
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
                 </div>
 
                 <!-- Global Stats Card -->
@@ -640,6 +644,16 @@
                         </div>
                     </div>`;
                 }).join('');
+                
+                // Share on X for Wall of Fame
+                const btn = document.getElementById('shareFameSidebarBtn');
+                if (btn) {
+                    btn.style.display = 'inline-flex';
+                    let names = top.slice(0, 3).map((c, i) => `${medals[i] || '•'} ${c.company_name} (${c.count} kudos)`).join('\n');
+                    const text = encodeURIComponent(`🌱 SLAScan Wall of Fame!\n\n${names}\n\nCheck out the top programs and credit good actors on SLAScan:`);
+                    const url = encodeURIComponent(window.location.origin);
+                    btn.href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                }
             } catch (e) {
                 console.error(e);
                 container.innerHTML = '<div class="text-xs text-gray-400 italic">Unavailable.</div>';
@@ -745,6 +759,8 @@
             
             const wosShareBtn = document.getElementById('shareWosSidebarBtn');
             if (wosShareBtn) wosShareBtn.addEventListener('click', () => { if(window.trackEvent) window.trackEvent('share_x', 'wall_of_shame'); });
+            const fameShareBtn = document.getElementById('shareFameSidebarBtn');
+            if (fameShareBtn) fameShareBtn.addEventListener('click', () => { if(window.trackEvent) window.trackEvent('share_x', 'wall_of_fame'); });
             
             const backdrop = document.getElementById('manifestoBackdrop');
             if (backdrop) backdrop.addEventListener('click', closeManifesto);
