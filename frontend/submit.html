@@ -32,11 +32,11 @@
 
     <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
         <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
+            <a href="index.html" id="navBack" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Back to Feed
             </a>
-            <span class="font-semibold text-alertOrange text-sm tracking-wide uppercase">Secure Submission</span>
+            <span id="navTitle" class="font-semibold text-gray-900 text-sm tracking-wide uppercase">Secure Submission</span>
         </div>
     </nav>
 
@@ -70,7 +70,28 @@
             </div>
 
             <!-- Step 1 -->
-            <div class="step active space-y-8" id="step1">
+            
+            <div class="step active space-y-6" id="step0">
+                <h2 class="text-2xl font-black text-gray-900 mb-6 text-center">What are you reporting?</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button type="button" onclick="setMode('breach')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertOrange hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <span class="text-2xl">🚨</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">SLA Breach / Ghosting</h3>
+                        <p class="text-sm text-gray-500">Report an unfair closure, ghosting, or delayed payment to the Wall of Shame.</p>
+                    </button>
+                    <button type="button" onclick="setMode('kudos')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertGreen hover:shadow-lg transition">
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <span class="text-2xl">🌱</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Program Kudos</h3>
+                        <p class="text-sm text-gray-500">Credit a program for fast payouts, fair mediation, or great communication.</p>
+                    </button>
+                </div>
+            </div>
+
+            <div class="step space-y-8" id="step1">
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">1. Target Company or Protocol</label>
                     <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-4 px-4 text-lg text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
@@ -370,6 +391,35 @@
         });
 
         // Populate companies list
+        
+        const subInput = document.getElementById('submission_date');
+        const resInput = document.getElementById('resolution_date');
+        const readout = document.getElementById('elapsedReadout');
+
+        function calcElapsed() {
+            if (mode !== 'kudos') {
+                readout.classList.add('hidden');
+                return;
+            }
+            if(subInput.value && resInput.value) {
+                const sub = new Date(subInput.value);
+                const res = new Date(resInput.value);
+                const diff = Math.floor((res - sub) / (1000 * 60 * 60 * 24));
+                readout.classList.remove('hidden', 'bg-red-50', 'text-alertRed', 'border-red-200', 'bg-green-50', 'text-alertGreen', 'border-green-200');
+                if (diff < 0) {
+                    readout.classList.add('bg-red-50', 'text-alertRed', 'border-red-200');
+                    readout.innerHTML = `⚠️ <strong>Resolution date is before submission date</strong>.`;
+                } else {
+                    readout.classList.add('bg-green-50', 'text-alertGreen', 'border-green-200');
+                    readout.innerHTML = `⏱️ <strong>${diff} days</strong> elapsed.`;
+                }
+            } else {
+                readout.classList.add('hidden');
+            }
+        }
+        subInput.addEventListener('change', calcElapsed);
+        resInput.addEventListener('change', calcElapsed);
+
         async function loadCompanies() {
             try {
                 const res = await fetch('/api/companies');
