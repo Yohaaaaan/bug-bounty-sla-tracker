@@ -32,11 +32,11 @@
 
     <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
         <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" id="navBack" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
+            <a href="index.html" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Back to Feed
             </a>
-            <span id="navTitle" class="font-semibold text-gray-900 text-sm tracking-wide uppercase">Secure Submission</span>
+            <span class="font-semibold text-alertOrange text-sm tracking-wide uppercase">Secure Submission</span>
         </div>
     </nav>
 
@@ -48,40 +48,27 @@
         </div>
 
         
-        <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <form id="reportForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gray-100">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-alertOrange to-alertRed progress-bar-fill" style="width: 25%;"></div>
-            </div>
-            
-            <div class="hidden" aria-hidden="true">
-                <label for="website_url">Honeypot</label>
-                <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-alertOrange to-red-500 transition-all duration-300" style="width: 0%;"></div>
             </div>
 
-            <!-- Header -->
-            <div class="mb-8 flex justify-between items-end border-b border-gray-100 pb-4">
-                <div>
-                    <h2 id="stepTitle" class="text-2xl font-black text-gray-900">Step 1: The Target</h2>
-                    <p id="stepDesc" class="text-sm text-gray-500 mt-1">Identify the company and platform.</p>
-                </div>
-                <div class="text-sm font-bold text-alertOrange">
-                    <span id="stepIndicator">1</span> / 4
-                </div>
+            <div id="wizardHeader" class="flex justify-between items-center mb-6" style="display: none;">
+                <h2 id="stepTitle" class="text-2xl font-black text-gray-900">Secure Submission</h2>
             </div>
 
-            <!-- Step 1 -->
-            
+            <!-- Step 0: Mode Selection -->
             <div class="step active space-y-6" id="step0">
                 <h2 class="text-2xl font-black text-gray-900 mb-6 text-center">What are you reporting?</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button type="button" onclick="setMode('breach')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertOrange hover:shadow-lg transition">
+                    <button type="button" onclick="window.setMode('breach')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertOrange hover:shadow-lg transition">
                         <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                             <span class="text-2xl">🚨</span>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-2">SLA Breach / Ghosting</h3>
                         <p class="text-sm text-gray-500">Report an unfair closure, ghosting, or delayed payment to the Wall of Shame.</p>
                     </button>
-                    <button type="button" onclick="setMode('kudos')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertGreen hover:shadow-lg transition">
+                    <button type="button" onclick="window.setMode('kudos')" class="group relative bg-white border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-alertGreen hover:shadow-lg transition">
                         <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition">
                             <span class="text-2xl">🌱</span>
                         </div>
@@ -91,6 +78,7 @@
                 </div>
             </div>
 
+            <!-- Step 1 -->
             <div class="step space-y-8" id="step1">
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">1. Target Company or Protocol</label>
@@ -131,66 +119,85 @@
                 </div>
             </div>
 
-            
             <!-- Step 2 -->
             <div class="step space-y-8" id="step2">
-                <div>
+                <div id="breachIssues">
                     <label class="block text-sm font-medium text-gray-600 mb-3">4. Issue Type</label>
                     <div class="space-y-3">
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
-                            <input type="radio" name="issue_type" value="SLA Response Delay (Triage)" required class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Response Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 7 days without triage)</span></span>
+                            <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Ghosting</strong> <span class="text-gray-500 text-xs ml-1">(No response at all)</span></span>
                         </label>
                         <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
                             <input type="radio" name="issue_type" value="SLA Resolution Delay (Fix/Payout)" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
-                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(> 30 days without fix/payout)</span></span>
+                            <span class="ml-3 text-sm text-gray-800"><strong>SLA Resolution Delay</strong> <span class="text-gray-500 text-xs ml-1">(Fix/Payout)</span></span>
                         </label>
-                        <label class="flex items-center p-4 border border-alertOrange/30 bg-alertOrange/5 rounded-lg cursor-pointer hover:bg-alertOrange/10 transition">
-                            <input type="radio" name="issue_type" value="Unjustified Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-alertOrange">
-                            <span class="ml-3 text-sm text-alertOrange font-medium">Unjustified Severity Downgrade</span>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Unjustified Payment Refusal</strong></span>
                         </label>
-                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                            <input type="radio" name="issue_type" value="Unjustified Payment Refusal" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                            <span class="ml-3 text-sm text-alertRed font-medium">Unjustified Payment Refusal</span>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="Unfair Out of Scope" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Unfair "Out of Scope" closure</strong></span>
                         </label>
-                        <label class="flex items-center p-4 border border-alertRed/30 bg-alertRed/5 rounded-lg cursor-pointer hover:bg-alertRed/10 transition">
-                            <input type="radio" name="issue_type" value="Ghosting (No response at all)" class="w-4 h-4 text-alertRed focus:ring-alertRed bg-white border-alertRed">
-                            <span class="ml-3 text-sm text-alertRed font-medium">Ghosting <span class="text-alertRed/60 text-xs ml-1">(> 14 days of complete silence)</span></span>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="issue_type" value="Unfair Severity Downgrade" class="w-4 h-4 text-alertOrange focus:ring-alertOrange bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Unfair Severity Downgrade</strong></span>
                         </label>
                     </div>
+                </div>
+
+                <div id="kudosIssues" class="hidden">
+                    <label class="block text-sm font-medium text-gray-600 mb-3">4. Highlight</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="highlight_type" value="Rapid Triage & Comms" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <span class="ml-3 text-sm font-medium text-gray-800">Rapid Triage & Comms</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="highlight_type" value="Fair Severity Upgrade" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <span class="ml-3 text-sm font-medium text-gray-800">Fair Severity Upgrade</span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="highlight_type" value="Bounty Paid As Scoped" class="w-4 h-4 text-alertGreen focus:ring-alertGreen border-gray-300">
+                            <span class="ml-3 text-sm font-medium text-gray-800">Bounty Paid As Scoped</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-gray-100">
+                    <label class="block text-sm font-medium text-gray-600 mb-6">5. Severity</label>
+                    <div class="relative px-2 max-w-md">
+                        <input type="range" id="severityRange" min="1" max="4" step="1" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-alertOrange">
+                        <div class="flex justify-between mt-4 text-xs font-bold text-gray-400">
+                            <span class="text-blue-500">Low</span>
+                            <span class="text-yellow-500">Med</span>
+                            <span class="text-alertOrange">High</span>
+                            <span class="text-alertRed">Crit</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="severity" id="severityInput" value="Medium">
                 </div>
             </div>
 
-            
             <!-- Step 3 -->
             <div class="step space-y-8" id="step3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-gray-100">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-6">5. Severity</label>
-                        
-                        <div class="relative px-2">
-                            <input type="range" id="severityRange" min="1" max="4" step="1" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-alertOrange">
-                            
-                            <div class="flex justify-between mt-4 text-xs font-bold text-gray-400">
-                                <span class="text-blue-500">Low</span>
-                                <span class="text-yellow-500">Med</span>
-                                <span class="text-alertOrange">High</span>
-                                <span class="text-alertRed">Crit</span>
-                            </div>
-                        </div>
-                        <input type="hidden" name="severity" id="severityInput" value="Medium">
+                        <label class="block text-sm font-medium text-gray-600 mb-3">6. Submission Date</label>
+                        <input type="date" name="submission_date" id="submission_date" required class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">When you sent the report.</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-3">6. Initial Submission Date</label>
-                        <div class="relative">
-                            <input type="date" name="submission_date" required class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100 transition-opacity">
-                        </div>
-                        <p class="text-xs text-gray-400 mt-2">When did you initially submit this report?</p>
+                    <div id="resolutionDateBox" class="hidden">
+                        <label class="block text-sm font-medium text-gray-600 mb-3">7. Closing Date</label>
+                        <input type="date" name="resolution_date" id="resolution_date" class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">Triage, fix or payout date.</p>
                     </div>
                 </div>
-                
+                <div id="elapsedReadout" class="hidden rounded-xl border px-4 py-3 text-sm font-medium mt-4"></div>
+
                 <div class="mt-8 border-t border-gray-100 pt-8">
-                    <label class="block text-sm font-medium text-gray-600 mb-2">7. Expected Bounty</label>
+                    <label id="bountyLabel" class="block text-sm font-medium text-gray-600 mb-2">7. Expected Bounty</label>
                     <div id="bountyField" class="relative max-w-md">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <span class="text-gray-500 font-medium">$</span>
@@ -209,7 +216,7 @@
                 </div>
             </div>
 
-            <!-- Step 4: Context & Evidence -->
+            <!-- Step 4 -->
             <div class="step space-y-8" id="step4">
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-2">8. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
@@ -223,14 +230,13 @@
                 </div>
             </div>
 
-            <!-- Step 4 (Success) -->
-
+            <!-- Success -->
             <div class="step space-y-8 text-center py-8" id="step5">
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
                 <h2 class="text-3xl font-black text-gray-900 mb-4">Report Submitted!</h2>
-                <p class="text-gray-500 mb-8 max-w-md mx-auto">Your report has been secured with Proof-of-Work and added to the public ledger. Help us hold them accountable by sharing this breach.</p>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto">Your report has been secured with Proof-of-Work and added to the public ledger.</p>
                 
                 <div class="flex flex-col gap-4 max-w-xs mx-auto">
                     <a id="shareNewReportBtn" target="_blank" href="#" class="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 rounded-xl font-bold transition flex justify-center items-center gap-2 shadow-lg hover:scale-105 transform">
@@ -238,36 +244,35 @@
                         Share on X
                     </a>
                     <a href="index.html" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition">
-                        Return to Home
+                        Return to Feed
                     </a>
                 </div>
             </div>
 
             <!-- Navigation Buttons -->
-
-            <!-- Navigation Buttons -->
-            <div class="pt-8 mt-4 flex justify-between items-center border-t border-gray-100">
+            <div id="navControls" class="pt-8 mt-4 flex justify-between items-center border-t border-gray-100" style="display: none;">
                 <button type="button" id="prevBtn" class="hidden text-gray-500 hover:text-gray-900 font-medium px-4 py-2 transition">
                     &larr; Back
                 </button>
                 <div class="flex-grow"></div>
-                <button type="button" id="nextBtn" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
+                <button type="button" id="nextBtn" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-xl">
                     Next Step
                 </button>
-                <button type="submit" id="submitBtn" class="hidden bg-alertRed hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
-                    Submit Report 🚀
+                <button type="submit" id="submitBtn" class="hidden bg-gradient-to-r from-alertOrange to-red-500 hover:from-alertOrange hover:to-red-600 text-white font-black py-3 px-8 rounded-xl shadow-[0_0_15px_rgba(255,107,107,0.4)] hover:shadow-[0_0_25px_rgba(255,107,107,0.6)] transition-all hover:-translate-y-0.5 text-lg">
+                    <span id="powBtn">Submit Report</span>
                 </button>
             </div>
         </form>
+
 
     </main>
 
     <script>
         
         
-        let currentStep = 0; // 0 = Mode Selection
-        let mode = null; // 'breach' or 'kudos'
-        const totalSteps = 5; // 0, 1, 2, 3, 4(success)
+        let currentStep = 0; 
+        let mode = null; 
+        const totalSteps = 5; 
         
         const form = document.getElementById('reportForm');
         const nextBtn = document.getElementById('nextBtn');
@@ -276,6 +281,9 @@
         const progressBar = document.getElementById('progressBar');
         const navTitle = document.getElementById('navTitle');
         const navBack = document.getElementById('navBack');
+        const subInput = document.getElementById('submission_date');
+        const resInput = document.getElementById('resolution_date');
+        const readout = document.getElementById('elapsedReadout');
         
         window.setMode = function(selectedMode) {
             mode = selectedMode;
@@ -288,7 +296,6 @@
                 
                 document.getElementById('breachIssues').classList.remove('hidden');
                 document.getElementById('kudosIssues').classList.add('hidden');
-                
                 document.getElementById('resolutionDateBox').classList.add('hidden');
                 document.getElementById('resolution_date').required = false;
                 
@@ -303,7 +310,6 @@
                 
                 document.getElementById('breachIssues').classList.add('hidden');
                 document.getElementById('kudosIssues').classList.remove('hidden');
-                
                 document.getElementById('resolutionDateBox').classList.remove('hidden');
                 document.getElementById('resolution_date').required = true;
                 
@@ -319,6 +325,30 @@
             showStep(currentStep);
         };
         
+        function calcElapsed() {
+            if (mode !== 'kudos') {
+                readout.classList.add('hidden');
+                return;
+            }
+            if(subInput && resInput && subInput.value && resInput.value) {
+                const sub = new Date(subInput.value);
+                const res = new Date(resInput.value);
+                const diff = Math.floor((res - sub) / (1000 * 60 * 60 * 24));
+                readout.classList.remove('hidden', 'bg-red-50', 'text-alertRed', 'border-red-200', 'bg-green-50', 'text-alertGreen', 'border-green-200');
+                if (diff < 0) {
+                    readout.classList.add('bg-red-50', 'text-alertRed', 'border-red-200');
+                    readout.innerHTML = `⚠️ <strong>Resolution date is before submission date</strong>.`;
+                } else {
+                    readout.classList.add('bg-green-50', 'text-alertGreen', 'border-green-200');
+                    readout.innerHTML = `⏱️ <strong>${diff} days</strong> elapsed.`;
+                }
+            } else {
+                readout.classList.add('hidden');
+            }
+        }
+        if(subInput) subInput.addEventListener('change', calcElapsed);
+        if(resInput) resInput.addEventListener('change', calcElapsed);
+        
         function showStep(step) {
             document.querySelectorAll('.step').forEach((el, index) => {
                 if(el.id === 'step' + step) {
@@ -328,7 +358,6 @@
                 }
             });
 
-            // Adjust progress bar
             const percentage = step === 0 ? 0 : ((step) / (totalSteps - 2)) * 100;
             progressBar.style.width = Math.min(percentage, 100) + '%';
             
@@ -341,12 +370,12 @@
                 }
             } else {
                 if (step === 1) {
-                    prevBtn.style.display = 'none'; // Replaced by a custom "Back to mode" or we just hide it
+                    prevBtn.style.display = 'none';
                 } else {
                     prevBtn.style.display = 'block';
                 }
                 
-                if (step === totalSteps - 2) { // Step 3
+                if (step === totalSteps - 2) { 
                     nextBtn.style.display = 'none';
                     submitBtn.style.display = 'block';
                 } else {
@@ -359,10 +388,11 @@
         
         nextBtn.addEventListener('click', () => {
             const currentStepEl = document.getElementById('step' + currentStep);
-            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            const inputs = currentStepEl.querySelectorAll('input:not(.hidden):not([disabled]), select:not(.hidden):not([disabled])');
             let valid = true;
             inputs.forEach(i => {
-                if (!i.checkValidity()) {
+                if (i.closest('.hidden')) return;
+                if (i.required && !i.checkValidity()) {
                     i.reportValidity();
                     valid = false;
                 }
@@ -378,13 +408,11 @@
                 currentStep--;
                 showStep(currentStep);
             } else {
-                // Return to mode selection
                 currentStep = 0;
                 showStep(currentStep);
             }
         });
-
-        // Prevent Enter key from submitting form prematurely
+// Prevent Enter key from submitting form prematurely
         form.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();
@@ -440,35 +468,6 @@
         });
 
         // Populate companies list
-        
-        const subInput = document.getElementById('submission_date');
-        const resInput = document.getElementById('resolution_date');
-        const readout = document.getElementById('elapsedReadout');
-
-        function calcElapsed() {
-            if (mode !== 'kudos') {
-                readout.classList.add('hidden');
-                return;
-            }
-            if(subInput.value && resInput.value) {
-                const sub = new Date(subInput.value);
-                const res = new Date(resInput.value);
-                const diff = Math.floor((res - sub) / (1000 * 60 * 60 * 24));
-                readout.classList.remove('hidden', 'bg-red-50', 'text-alertRed', 'border-red-200', 'bg-green-50', 'text-alertGreen', 'border-green-200');
-                if (diff < 0) {
-                    readout.classList.add('bg-red-50', 'text-alertRed', 'border-red-200');
-                    readout.innerHTML = `⚠️ <strong>Resolution date is before submission date</strong>.`;
-                } else {
-                    readout.classList.add('bg-green-50', 'text-alertGreen', 'border-green-200');
-                    readout.innerHTML = `⏱️ <strong>${diff} days</strong> elapsed.`;
-                }
-            } else {
-                readout.classList.add('hidden');
-            }
-        }
-        subInput.addEventListener('change', calcElapsed);
-        resInput.addEventListener('change', calcElapsed);
-
         async function loadCompanies() {
             try {
                 const res = await fetch('/api/companies');
