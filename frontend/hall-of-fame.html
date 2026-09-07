@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall of Fame - SLAScan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900', alertGreen: '#00cc66' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-400 to-alertGreen flex items-center justify-center shadow-md">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide text-gray-900">SLAScan</span>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">Home</a>
+                    <a href="hall-of-fame.html" class="text-alertGreen text-sm font-bold transition">Hall of Fame</a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 text-sm font-medium transition">About</a>
+                    <a href="praise.html" class="bg-alertGreen hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg">Credit a Program</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+
+        <!-- Hero -->
+        <div class="text-center mb-16 relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-alertGreen/20 blur-[100px] rounded-full pointer-events-none"></div>
+            <h1 class="text-5xl sm:text-6xl font-extrabold mb-6 pb-2 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">The Ledger, Reversed</h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light leading-relaxed mb-8">A wall of shame tells you who to avoid. It never tells you where a month of work is worth spending. These are the programs that triaged fast, judged fairly and paid what they published, with the dates to back it.</p>
+
+            <a href="praise.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-alertGreen hover:from-emerald-300 hover:to-emerald-500 text-white font-black py-2.5 px-6 rounded-xl shadow-[0_0_15px_rgba(0,204,102,0.3)] hover:shadow-[0_0_25px_rgba(0,204,102,0.5)] transition-all hover:-translate-y-0.5 text-base">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                Credit a Program
+            </a>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="flex flex-col lg:flex-row gap-6 relative z-10">
+
+            <!-- LEFT -->
+            <div class="w-full lg:w-72 xl:w-80 flex-shrink-0 flex flex-col gap-4">
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-black text-alertGreen uppercase tracking-widest flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                            Wall of Fame
+                        </h3>
+                        <div class="flex bg-gray-100 rounded-lg p-0.5">
+                            <button id="btnWofAll" class="px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition">All Time</button>
+                            <button id="btnWofWeek" class="px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition">Week</button>
+                        </div>
+                    </div>
+                    <div id="sidebarTopCompanies" class="space-y-2">
+                        <div class="text-xs text-gray-400 animate-pulse">Loading...</div>
+                    </div>
+
+                    <a id="shareWofSidebarBtn" target="_blank" href="#" class="mt-4 w-full inline-flex justify-center items-center gap-2 bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-xl transition text-xs shadow-md">
+                        Share on X
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Global Fame Stats</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Total Credits</span>
+                            <span id="statTotalKudos" class="text-xl font-black text-gray-900">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Programs Credited</span>
+                            <span id="statCompanies" class="text-xl font-black text-gray-900">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Median Days to Close</span>
+                            <span id="statAvgDays" class="text-xl font-black text-alertGreen">—</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">Bounties Confirmed</span>
+                                <span id="statAwarded" class="text-xl font-black text-gray-900">—</span>
+                            </div>
+                            <p id="statUndisclosed" class="text-[11px] text-gray-400 mt-0.5"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Credits by Type</h3>
+                    <div id="highlightBreakdown" class="space-y-2">
+                        <div class="text-xs text-gray-400 animate-pulse">Loading...</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="flex-1 min-w-0 flex flex-col gap-4">
+
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                    <input type="text" id="searchInput" placeholder="Search by company name…" class="w-full bg-white border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen transition shadow-sm">
+                </div>
+
+                <div id="kudosGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div class="col-span-full text-center py-10 text-gray-400 text-sm">Loading credits…</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Net reputation -->
+        <section class="mt-16">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Net Reputation</h2>
+                    <p class="text-sm text-gray-500 mt-1 max-w-2xl">Both registers on one line. A program with four credits and one breach is not the same read as one with a single credit, and neither wall shows you that on its own.</p>
+                </div>
+                <div class="flex bg-gray-100 rounded-lg p-0.5 self-start">
+                    <button id="btnRepBest" class="px-3 py-1.5 text-xs font-bold rounded-md bg-white shadow-sm text-gray-900 transition">Best first</button>
+                    <button id="btnRepWorst" class="px-3 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:text-gray-900 transition">Worst first</button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr class="text-left text-[11px] uppercase tracking-widest text-gray-400">
+                                <th class="px-5 py-3 font-bold">Company</th>
+                                <th class="px-5 py-3 font-bold text-right">Credits</th>
+                                <th class="px-5 py-3 font-bold text-right">Breaches</th>
+                                <th class="px-5 py-3 font-bold text-right">Net</th>
+                                <th class="px-5 py-3 font-bold text-right">Last activity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reputationRows" class="divide-y divide-gray-100">
+                            <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">SLAScan &copy; 2026. Community Driven.</p>
+            <div class="mt-2 flex justify-center items-center gap-4">
+                <a href="about.html#legal" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy &amp; Terms</a>
+                <span class="text-gray-300">|</span>
+                <a href="index.html" class="text-xs text-gray-400 hover:text-gray-600">Breach ledger</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const escapeHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return "Just now";
+        }
+
+        function getSeverityColor(sev) {
+            if (sev === 'Critical') return 'text-alertRed bg-alertRed/10 border-alertRed/20';
+            if (sev === 'High') return 'text-alertOrange bg-alertOrange/10 border-alertOrange/20';
+            return 'text-gray-600 bg-white/5 border-gray-200';
+        }
+
+        function formatMoney(n) {
+            const v = Number(n || 0);
+            if (v >= 1000000) return '$' + (v / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (v >= 1000) return '$' + (v / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            return '$' + v;
+        }
+
+        async function flagKudos(id) {
+            if (!confirm('Report this credit as fake/spam? Your browser will perform a PoW calculation.')) return;
+            try {
+                const resChallenge = await fetch('/api/pow-challenge');
+                const { challenge, difficulty } = await resChallenge.json();
+
+                let nonce = 0;
+                const prefix = '0'.repeat(difficulty);
+                const compute = async () => {
+                    for (let i = 0; i < 20000; i++) {
+                        const hashHex = CryptoJS.SHA256(challenge + nonce).toString(CryptoJS.enc.Hex);
+                        if (hashHex.startsWith(prefix)) return nonce;
+                        nonce++;
+                    }
+                    return new Promise(resolve => setTimeout(() => resolve(compute()), 0));
+                };
+                const foundNonce = await compute();
+
+                const res = await fetch(`/api/kudos/${id}/flag`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pow_challenge: challenge, pow_nonce: foundNonce })
+                });
+
+                if (res.ok) {
+                    alert('Flag submitted.');
+                    fetchKudos(document.getElementById('searchInput').value);
+                } else {
+                    const err = await res.json();
+                    alert('Error: ' + (err.error || 'Flag failed'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Error flagging credit.');
+            }
+        }
+
+        async function fetchKudos(query = '') {
+            try {
+                const res = await fetch(`/api/kudos?search=${encodeURIComponent(query)}&t=${Date.now()}`);
+                const kudos = await res.json();
+                const grid = document.getElementById('kudosGrid');
+
+                if (!kudos.length) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-12 px-4 bg-white rounded-2xl border border-gray-200 border-dashed">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">No credits yet</h3>
+                        <p class="text-gray-500 mb-6">Has a program triaged you fast, judged you fairly, or paid what it published?</p>
+                        <a href="praise.html" class="inline-flex items-center gap-2 bg-alertGreen hover:bg-emerald-600 text-white font-medium py-2.5 px-6 rounded-xl transition shadow-lg">
+                            Be the first to credit them
+                        </a>
+                    </div>`;
+                    return;
+                }
+
+                grid.innerHTML = kudos.map(k => {
+                    const days = k.elapsed_days;
+                    const speedLine = (days === null || days === undefined)
+                        ? ''
+                        : `<p class="text-[10px] font-bold text-emerald-600 mb-2 uppercase tracking-wide">Closed in ${days} day${days === 1 ? '' : 's'}</p>`;
+                    // A withheld figure is stated, not hidden: an empty slot would read
+                    // as "paid nothing", which is a different claim entirely.
+                    const payout = (k.awarded_bounty === null || k.awarded_bounty === undefined)
+                        ? `<span class="px-2 py-0.5 rounded font-bold border border-gray-200 bg-gray-50 text-gray-400 text-[10px]" title="The researcher chose not to disclose the amount">Undisclosed</span>`
+                        : `<span class="px-2 py-0.5 rounded font-bold border border-alertGreen/20 bg-alertGreen/10 text-emerald-700 text-[10px]">${escapeHtml(formatMoney(k.awarded_bounty))}</span>`;
+
+                    return `
+<div class="bg-white shadow-sm border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-md transition duration-200 relative overflow-hidden group flex flex-col justify-between">
+    <div class="absolute top-0 left-0 w-1 h-full bg-alertGreen opacity-70 group-hover:opacity-100 transition"></div>
+    <div class="pl-2 w-full">
+        <div class="flex justify-between items-start mb-1 gap-2">
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight truncate" title="${escapeHtml(k.company_name)}">${escapeHtml(k.company_name)}</h3>
+            <span class="text-[10px] text-gray-400 font-medium whitespace-nowrap pt-1">${timeAgo(k.created_at)}</span>
+        </div>
+        <p class="text-emerald-600 font-semibold text-[12px] mb-1 leading-snug line-clamp-1" title="${escapeHtml(k.highlight_type)}">${escapeHtml(k.highlight_type)}</p>
+        ${speedLine}
+        <div class="flex justify-between items-center text-xs pt-3 border-t border-gray-100 pl-2">
+            <div class="flex items-center gap-2">
+                ${k.severity && k.severity !== 'N/A' ? `<span class="px-2 py-0.5 rounded font-bold border ${getSeverityColor(k.severity)} text-[10px]">${escapeHtml(k.severity)}</span>` : ''}
+                ${payout}
+                <button data-flag-id="${escapeHtml(k.id)}" title="Flag as fake/spam" class="text-gray-300 hover:text-red-500 transition flag-kudos-btn">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                </button>
+            </div>
+            <span class="bg-gray-50 text-gray-500 border border-gray-200 px-2 py-0.5 rounded uppercase tracking-wider font-bold text-[9px] truncate max-w-[100px] text-right" title="${escapeHtml(k.platform || 'Unknown')}">${escapeHtml(k.platform || 'Unknown')}</span>
+        </div>
+    </div>
+</div>`;
+                }).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        let allKudosCache = [];
+        let wofCurrentFilter = 'all';
+
+        async function loadFameStats() {
+            try {
+                const [statsRes, listRes] = await Promise.all([
+                    fetch('/api/hall-of-fame?t=' + Date.now()),
+                    fetch('/api/kudos?t=' + Date.now())
+                ]);
+                const stats = await statsRes.json();
+                allKudosCache = await listRes.json();
+
+                document.getElementById('statTotalKudos').textContent = stats.totals.totalKudos || 0;
+                document.getElementById('statCompanies').textContent = stats.totals.totalCompanies || 0;
+                document.getElementById('statAvgDays').textContent = stats.totals.avgDays === null || stats.totals.avgDays === undefined ? '—' : stats.totals.avgDays;
+                document.getElementById('statAwarded').textContent = formatMoney(stats.totals.totalAwarded);
+
+                // The sum is a floor, not a total, whenever anyone withheld a figure.
+                // Saying so is the difference between a statistic and a claim.
+                const undisclosed = stats.totals.undisclosed || 0;
+                document.getElementById('statUndisclosed').textContent = undisclosed
+                    ? `Floor only: ${undisclosed} credit${undisclosed === 1 ? '' : 's'} withheld the amount.`
+                    : '';
+
+                const breakdown = document.getElementById('highlightBreakdown');
+                if (!stats.highlightStats.length) {
+                    breakdown.innerHTML = '<div class="text-xs text-gray-400 italic">Nothing recorded yet.</div>';
+                } else {
+                    const max = Math.max(...stats.highlightStats.map(h => h.count));
+                    breakdown.innerHTML = stats.highlightStats.map(h => `
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-[11px] font-semibold text-gray-600 truncate max-w-[170px]" title="${escapeHtml(h.highlight_type)}">${escapeHtml(h.highlight_type)}</span>
+                                <span class="text-[11px] font-black text-gray-500">${h.count}</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-alertGreen h-1.5 rounded-full" style="width: ${Math.max(5, (h.count / max) * 100)}%"></div>
+                            </div>
+                        </div>`).join('');
+                }
+
+                renderWof(wofCurrentFilter);
+            } catch (e) { console.error(e); }
+        }
+
+        function setWofFilter(filter) {
+            wofCurrentFilter = filter;
+            const active = 'px-2 py-1 text-[10px] font-bold rounded-md bg-white shadow-sm text-gray-900 transition';
+            const idle = 'px-2 py-1 text-[10px] font-bold rounded-md text-gray-500 hover:text-gray-900 transition';
+            document.getElementById('btnWofAll').className = filter === 'all' ? active : idle;
+            document.getElementById('btnWofWeek').className = filter === 'week' ? active : idle;
+            renderWof(filter);
+        }
+
+        function renderWof(filter) {
+            const container = document.getElementById('sidebarTopCompanies');
+            const shareBtn = document.getElementById('shareWofSidebarBtn');
+
+            let dataset = allKudosCache;
+            if (filter === 'week') {
+                const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+                dataset = allKudosCache.filter(k => {
+                    const t = new Date(k.created_at).getTime();
+                    return !isNaN(t) && t >= sevenDaysAgo;
+                });
+            }
+
+            const counts = {};
+            dataset.forEach(k => {
+                if (k.company_name) counts[k.company_name] = (counts[k.company_name] || 0) + 1;
+            });
+            const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+            if (!top.length) {
+                container.innerHTML = `<div class="text-xs text-gray-400 italic">${filter === 'week' ? 'No credits this week.' : 'No credits yet.'}</div>`;
+                shareBtn.style.display = 'none';
+                return;
+            }
+
+            shareBtn.style.display = 'inline-flex';
+            const medals = ['🥇', '🥈', '🥉'];
+            const maxCount = Math.max(...top.map(t => t[1]));
+
+            container.innerHTML = top.map(([name, count], i) => `
+                <div class="group cursor-pointer mb-3 last:mb-0 wof-company-row" data-company="${escapeHtml(name)}">
+                    <div class="flex justify-between items-end mb-1 px-1">
+                        <span class="text-base font-bold text-gray-900 flex items-center gap-1.5 truncate max-w-[150px] group-hover:text-alertGreen transition" title="${escapeHtml(name)}">
+                            <span>${medals[i] || '▸'}</span> <span class="truncate">${escapeHtml(name)}</span>
+                        </span>
+                        <span class="text-xs font-black text-gray-500 group-hover:text-alertGreen transition">${count}</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-alertGreen h-1.5 rounded-full transition-all duration-500 ease-out" style="width: ${Math.max(5, (count / maxCount) * 100)}%"></div>
+                    </div>
+                </div>`).join('');
+
+            const top3 = top.slice(0, 3);
+            const names = top3.map(([n], i) => `${medals[i] || '▸'} ${n}`).join('\n');
+            const periodText = filter === 'week' ? "This week's" : "All-time";
+            const text = encodeURIComponent(`${periodText} SLAScan Hall of Fame, the programs that actually answered:\n\n${names}\n\nSame ledger, other direction. Credit yours:`);
+            const url = encodeURIComponent(window.location.origin + '/hall-of-fame.html');
+            shareBtn.href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        }
+
+        let reputationCache = [];
+        let reputationOrder = 'best';
+
+        async function loadReputation() {
+            try {
+                const res = await fetch('/api/reputation?t=' + Date.now());
+                reputationCache = await res.json();
+                renderReputation();
+            } catch (e) { console.error(e); }
+        }
+
+        function renderReputation() {
+            const tbody = document.getElementById('reputationRows');
+            if (!reputationCache.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">Nothing recorded on either side yet.</td></tr>';
+                return;
+            }
+
+            const rows = reputationCache.slice().sort((a, b) => reputationOrder === 'best' ? b.net - a.net : a.net - b.net).slice(0, 25);
+
+            tbody.innerHTML = rows.map(r => {
+                const netClass = r.net > 0 ? 'text-alertGreen' : (r.net < 0 ? 'text-alertRed' : 'text-gray-500');
+                const netSign = r.net > 0 ? '+' : '';
+                return `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-3 font-semibold text-gray-900">${escapeHtml(r.company_name)}</td>
+                    <td class="px-5 py-3 text-right text-emerald-600 font-bold">${r.praise_count}</td>
+                    <td class="px-5 py-3 text-right text-alertRed font-bold">${r.breach_count}</td>
+                    <td class="px-5 py-3 text-right font-black ${netClass}">${netSign}${r.net}</td>
+                    <td class="px-5 py-3 text-right text-gray-400 text-xs">${r.last_activity ? timeAgo(r.last_activity.includes('T') ? r.last_activity : r.last_activity.replace(' ', 'T') + 'Z') : '—'}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        document.getElementById('sidebarTopCompanies').addEventListener('click', (e) => {
+            const row = e.target.closest('.wof-company-row');
+            if (row) {
+                const company = row.getAttribute('data-company');
+                if (company) {
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.value = company;
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            }
+        });
+
+        document.getElementById('kudosGrid').addEventListener('click', (e) => {
+            const btn = e.target.closest('.flag-kudos-btn');
+            if (btn) {
+                const id = btn.getAttribute('data-flag-id');
+                if (id) flagKudos(id);
+            }
+        });
+
+        document.getElementById('btnWofAll').addEventListener('click', () => setWofFilter('all'));
+        document.getElementById('btnWofWeek').addEventListener('click', () => setWofFilter('week'));
+
+        document.getElementById('btnRepBest').addEventListener('click', () => {
+            reputationOrder = 'best';
+            document.getElementById('btnRepBest').className = 'px-3 py-1.5 text-xs font-bold rounded-md bg-white shadow-sm text-gray-900 transition';
+            document.getElementById('btnRepWorst').className = 'px-3 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:text-gray-900 transition';
+            renderReputation();
+        });
+        document.getElementById('btnRepWorst').addEventListener('click', () => {
+            reputationOrder = 'worst';
+            document.getElementById('btnRepWorst').className = 'px-3 py-1.5 text-xs font-bold rounded-md bg-white shadow-sm text-gray-900 transition';
+            document.getElementById('btnRepBest').className = 'px-3 py-1.5 text-xs font-bold rounded-md text-gray-500 hover:text-gray-900 transition';
+            renderReputation();
+        });
+
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', e => {
+            fetchKudos(e.target.value);
+            clearTimeout(searchTimeout);
+            if (e.target.value.trim().length > 1) {
+                searchTimeout = setTimeout(() => {
+                    if (window.trackEvent) window.trackEvent('search_fame', e.target.value.trim());
+                }, 1000);
+            }
+        });
+
+        fetchKudos();
+        loadFameStats();
+        loadReputation();
+    </script>
+
+    <!-- Granular Analytics & Privacy-first Telemetry -->
+    <script>
+        function getOrSetId(storage, key) {
+            let id = storage.getItem(key);
+            if (!id) {
+                id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                storage.setItem(key, id);
+            }
+            return id;
+        }
+
+        const deviceId = getOrSetId(localStorage, 'slascan_did');
+        const sessionId = getOrSetId(sessionStorage, 'slascan_sid');
+
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/', device_id: deviceId, session_id: sessionId })
+        }).catch(e => {});
+
+        function trackEvent(actionType, actionDetail = null) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action_type: actionType, action_detail: actionDetail, device_id: deviceId, session_id: sessionId })
+            }).catch(e => {});
+        }
+        window.trackEvent = trackEvent;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const shareBtn = document.getElementById('shareWofSidebarBtn');
+            if (shareBtn) shareBtn.addEventListener('click', () => trackEvent('share_x', 'wall_of_fame'));
+        });
+    </script>
+</body>
+</html>
