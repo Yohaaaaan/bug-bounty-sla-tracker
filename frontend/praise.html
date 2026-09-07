@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit a Program - SLAScan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { alertRed: '#ff4d4d', alertOrange: '#ff9900', alertGreen: '#00cc66' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        .step { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar-fill { transition: width 0.3s ease-in-out; }
+    </style>
+
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="hall-of-fame.html" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 text-sm font-medium transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Hall of Fame
+            </a>
+            <span class="font-semibold text-alertGreen text-sm tracking-wide uppercase">Secure Submission</span>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-3xl mx-auto px-4 py-12 w-full">
+
+        <div class="mb-10 text-center">
+            <h1 class="text-3xl font-bold mb-3 text-gray-900">Credit a Program</h1>
+            <p class="text-sm text-gray-500 leading-relaxed max-w-xl mx-auto">The same ledger, run the other way. <strong class="text-gray-800">Do not include technical details about vulnerabilities.</strong> Every entry is a dated claim someone else can contradict, and your browser pays the same Proof-of-Work as a breach report.</p>
+        </div>
+
+        <form id="praiseForm" class="bg-white shadow-md border border-gray-200 backdrop-blur-md rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gray-100">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-400 to-alertGreen progress-bar-fill" style="width: 25%;"></div>
+            </div>
+
+            <div class="hidden" aria-hidden="true">
+                <label for="website_url">Honeypot</label>
+                <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- Header -->
+            <div class="mb-8 flex justify-between items-end border-b border-gray-100 pb-4" id="wizardHeader">
+                <div>
+                    <h2 id="stepTitle" class="text-2xl font-black text-gray-900">Step 1: The Program</h2>
+                    <p id="stepDesc" class="text-sm text-gray-500 mt-1">Identify the company and platform.</p>
+                </div>
+                <div class="text-sm font-bold text-alertGreen">
+                    <span id="stepIndicator">1</span> / 4
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="step active space-y-8" id="step1">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">1. Company or Protocol</label>
+                    <input type="text" name="company_name" id="company_name" required list="companies-list" placeholder="e.g. Acme Corp, DeFi Swap..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-4 px-4 text-lg text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm">
+                    <datalist id="companies-list"></datalist>
+                    <p class="text-xs text-gray-500 mt-2">The list is shared with the breach ledger, so the same entity keeps one spelling on both sides.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-100">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">2. Category</label>
+                        <select name="bounty_category" required class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen appearance-none shadow-sm">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Web / API">Web / API</option>
+                            <option value="Smart Contract / Blockchain">Smart Contract / Blockchain</option>
+                            <option value="Mobile App">Mobile App</option>
+                            <option value="Hardware / IoT">Hardware / IoT</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">3. Platform</label>
+                        <input type="text" name="platform" id="platform" list="platforms-list" required placeholder="e.g. Immunefi, HackerOne..." autocomplete="off" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm">
+                        <datalist id="platforms-list">
+                            <option value="HackerOne"></option>
+                            <option value="Bugcrowd"></option>
+                            <option value="Intigriti"></option>
+                            <option value="YesWeHack"></option>
+                            <option value="Synack"></option>
+                            <option value="Immunefi"></option>
+                            <option value="Sherlock"></option>
+                            <option value="Code4rena"></option>
+                            <option value="Cantina"></option>
+                            <option value="HackenProof"></option>
+                            <option value="Salus Security"></option>
+                            <option value="Independent"></option>
+                            <option value="Other"></option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step space-y-8" id="step2">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-3">4. What did they get right?</label>
+                    <p class="text-xs text-gray-400 mb-4 -mt-1">Each line is the exact mirror of a breach the ledger already tracks. The window in brackets is checked server-side against your two dates.</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-alertGreen/30 bg-alertGreen/5 rounded-lg cursor-pointer hover:bg-alertGreen/10 transition">
+                            <input type="radio" name="highlight_type" value="Fast Triage" required class="w-4 h-4 text-alertGreen focus:ring-alertGreen bg-white border-alertGreen">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Fast Triage</strong> <span class="text-gray-500 text-xs ml-1">(triaged within 7 days)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertGreen/30 bg-alertGreen/5 rounded-lg cursor-pointer hover:bg-alertGreen/10 transition">
+                            <input type="radio" name="highlight_type" value="Fast Resolution / Payout" class="w-4 h-4 text-alertGreen focus:ring-alertGreen bg-white border-alertGreen">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Fast Resolution / Payout</strong> <span class="text-gray-500 text-xs ml-1">(fixed or paid within 30 days)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-alertGreen/30 bg-alertGreen/5 rounded-lg cursor-pointer hover:bg-alertGreen/10 transition">
+                            <input type="radio" name="highlight_type" value="Consistent Communication" class="w-4 h-4 text-alertGreen focus:ring-alertGreen bg-white border-alertGreen">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Consistent Communication</strong> <span class="text-gray-500 text-xs ml-1">(closed within 14 days, never went silent)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="highlight_type" value="Fair Severity Assessment" class="w-4 h-4 text-alertGreen focus:ring-alertGreen bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Fair Severity Assessment</strong> <span class="text-gray-500 text-xs ml-1">(kept or raised your rating, no window)</span></span>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 bg-gray-50 rounded-lg cursor-pointer hover:bg-white/5 transition">
+                            <input type="radio" name="highlight_type" value="Bounty Paid As Scoped" class="w-4 h-4 text-alertGreen focus:ring-alertGreen bg-white border-gray-600">
+                            <span class="ml-3 text-sm text-gray-800"><strong>Bounty Paid As Scoped</strong> <span class="text-gray-500 text-xs ml-1">(paid the published tier, no window)</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step space-y-8" id="step3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-6">5. Severity of the report they handled</label>
+                    <div class="relative px-2 max-w-md">
+                        <input type="range" id="severityRange" min="1" max="4" step="1" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-alertGreen">
+                        <div class="flex justify-between mt-4 text-xs font-bold text-gray-400">
+                            <span class="text-blue-500">Low</span>
+                            <span class="text-yellow-500">Med</span>
+                            <span class="text-alertOrange">High</span>
+                            <span class="text-alertRed">Crit</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="severity" id="severityInput" value="Medium">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-gray-100">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-3">6. Submission Date</label>
+                        <input type="date" name="submission_date" id="submission_date" required class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">When you sent the report.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-3">7. Closing Date</label>
+                        <input type="date" name="resolution_date" id="resolution_date" required class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm cursor-pointer">
+                        <p class="text-xs text-gray-400 mt-2">Triage, fix or payout, whichever you are crediting.</p>
+                    </div>
+                </div>
+
+                <div id="elapsedReadout" class="hidden rounded-xl border px-4 py-3 text-sm font-medium"></div>
+
+                <div class="mt-4 border-t border-gray-100 pt-8">
+                    <label class="block text-sm font-medium text-gray-600 mb-2">8. Bounty Actually Paid</label>
+                    <div id="bountyField" class="relative max-w-md">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 font-medium">$</span>
+                        </div>
+                        <input type="number" id="awardedBounty" name="awarded_bounty" placeholder="5000" min="0" required class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm">
+                    </div>
+                    <p id="bountyHint" class="text-xs text-gray-400 mt-2">Enter <strong>0</strong> if there was no payout: handling a report well and paying for it are two different credits.</p>
+
+                    <label class="mt-4 flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition max-w-md">
+                        <input type="checkbox" id="hideBounty" class="mt-0.5 w-4 h-4 rounded text-alertGreen focus:ring-alertGreen border-gray-300">
+                        <span class="text-sm text-gray-700">
+                            <strong class="font-semibold">Do not disclose the amount</strong>
+                            <span class="block text-xs text-gray-500 mt-0.5">Some NDAs forbid it, and some payouts identify the researcher on their own. The credit is recorded either way; only the figure is withheld.</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step space-y-8" id="step4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">9. Story / Context <span class="text-xs font-normal text-gray-400 ml-2">(Optional)</span></label>
+                    <textarea name="context" rows="3" placeholder="e.g., Triaged in 6 hours, engineer joined the thread, paid the published Critical tier without negotiation..." class="w-full bg-white border border-gray-300 rounded-lg py-3 px-4 text-sm text-gray-900 focus:outline-none focus:border-alertGreen focus:ring-1 focus:ring-alertGreen shadow-sm resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">10. Proof Image <span class="text-xs font-normal text-gray-400 ml-2">(Optional but recommended)</span></label>
+                    <input type="file" name="proof_image" accept="image/*" class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-900 focus:outline-none focus:border-alertGreen shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
+                    <p class="text-xs text-gray-400 mt-2">A screenshot of the timeline or the payout confirmation. Praise carries as much weight as a proof, which is to say: none without one.</p>
+                </div>
+            </div>
+
+            <!-- Success -->
+            <div class="step space-y-8 text-center py-8" id="step5">
+                <div class="w-20 h-20 bg-alertGreen/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-alertGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl font-black text-gray-900 mb-4">Credit Recorded</h2>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto">It is on the public ledger, next to the breaches, under the same rules. Naming the programs worth working on is how the next researcher finds them.</p>
+
+                <div class="flex flex-col gap-4 max-w-xs mx-auto">
+                    <a id="shareNewPraiseBtn" target="_blank" href="#" class="w-full bg-black hover:bg-gray-800 text-white py-3 px-6 rounded-xl font-bold transition flex justify-center items-center gap-2 shadow-lg hover:scale-105 transform">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Share on X
+                    </a>
+                    <a href="hall-of-fame.html" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition">
+                        Back to the Hall of Fame
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="pt-8 mt-4 flex justify-between items-center border-t border-gray-100">
+                <button type="button" id="prevBtn" class="hidden text-gray-500 hover:text-gray-900 font-medium px-4 py-2 transition">
+                    &larr; Back
+                </button>
+                <div class="flex-grow"></div>
+                <button type="button" id="nextBtn" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
+                    Next Step
+                </button>
+                <button type="submit" id="submitBtn" class="hidden bg-alertGreen hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold transition duration-300 shadow-md">
+                    Record Credit
+                </button>
+            </div>
+        </form>
+
+    </main>
+
+    <script>
+        // The window each highlight is checked against, server-side. Mirrored here only
+        // so the wizard can tell you before you spend 20 seconds of Proof-of-Work.
+        const HIGHLIGHT_WINDOWS = {
+            'Fast Triage': 7,
+            'Fast Resolution / Payout': 30,
+            'Consistent Communication': 14,
+            'Fair Severity Assessment': null,
+            'Bounty Paid As Scoped': null
+        };
+        const MS_PER_DAY = 86400000;
+
+        let currentStep = 1;
+        const totalSteps = 4;
+        const form = document.getElementById('praiseForm');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const titles = ["Step 1: The Program", "Step 2: The Credit", "Step 3: The Timeline", "Step 4: Context & Evidence"];
+        const descs = ["Identify the company and platform.", "What exactly did they get right?", "Two dates, and what they paid.", "Provide context and proof."];
+
+        function parseDay(value) {
+            if (!value) return null;
+            const d = new Date(value + 'T00:00:00Z');
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        function selectedHighlight() {
+            const el = form.querySelector('input[name="highlight_type"]:checked');
+            return el ? el.value : null;
+        }
+
+        // Returns null when the pair is acceptable, or the reason it is not.
+        function checkTimeline() {
+            const highlight = selectedHighlight();
+            const submitted = parseDay(document.getElementById('submission_date').value);
+            const resolved = parseDay(document.getElementById('resolution_date').value);
+            if (!highlight || !submitted || !resolved) return { pending: true };
+
+            const now = Date.now();
+            if (submitted.getTime() > now || resolved.getTime() > now) {
+                return { error: 'Dates cannot be in the future.' };
+            }
+            if (resolved.getTime() < submitted.getTime()) {
+                return { error: 'The closing date cannot precede the submission date.' };
+            }
+
+            const days = Math.floor((resolved.getTime() - submitted.getTime()) / MS_PER_DAY);
+            const window = HIGHLIGHT_WINDOWS[highlight];
+            if (window !== null && days > window) {
+                return { days, error: `"${highlight}" is only recorded when the case closed within ${window} days. Yours took ${days}.` };
+            }
+            return { days };
+        }
+
+        function renderElapsed() {
+            const readout = document.getElementById('elapsedReadout');
+            const result = checkTimeline();
+            if (result.pending) {
+                readout.classList.add('hidden');
+                return;
+            }
+            readout.classList.remove('hidden');
+            if (result.error) {
+                readout.className = 'rounded-xl border px-4 py-3 text-sm font-medium border-alertRed/30 bg-alertRed/5 text-alertRed';
+                readout.textContent = result.error;
+            } else {
+                readout.className = 'rounded-xl border px-4 py-3 text-sm font-medium border-alertGreen/30 bg-alertGreen/5 text-emerald-700';
+                readout.textContent = result.days === 0
+                    ? 'Closed the same day. That is the top of this ledger.'
+                    : `Closed in ${result.days} day${result.days === 1 ? '' : 's'}.`;
+            }
+        }
+
+        function showStep(step) {
+            const company = document.getElementById('company_name').value || 'a program';
+            const highlight = selectedHighlight() || 'a clean handling';
+            const text = encodeURIComponent(`I just credited ${company} on SLAScan for ${highlight}.\n\nThe ledger records who does this right, not only who does it wrong.\nSee the Hall of Fame:`);
+            const url = encodeURIComponent(window.location.origin + '/hall-of-fame.html');
+            document.getElementById('shareNewPraiseBtn').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            document.getElementById('progressBar').style.width = ((step / totalSteps) * 100) + '%';
+            document.getElementById('stepIndicator').innerText = step;
+            document.getElementById('stepTitle').innerText = titles[step - 1];
+            document.getElementById('stepDesc').innerText = descs[step - 1];
+
+            if (step === 1) {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Next Step';
+            } else if (step === totalSteps) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else if (step === 3) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Last Step →';
+            } else {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                nextBtn.innerText = 'Next Step';
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            const currentStepEl = document.getElementById('step' + currentStep);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            let valid = true;
+            inputs.forEach(i => {
+                if (!i.checkValidity()) {
+                    i.reportValidity();
+                    valid = false;
+                }
+            });
+
+            // Refuse to walk past a timeline the server is going to reject anyway.
+            if (valid && currentStep === 3) {
+                const result = checkTimeline();
+                if (result.error) {
+                    renderElapsed();
+                    alert('Error: ' + result.error);
+                    valid = false;
+                }
+            }
+
+            if (valid && currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        form.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                if (currentStep < totalSteps) nextBtn.click();
+                else submitBtn.click();
+            }
+        });
+
+        const sevRange = document.getElementById('severityRange');
+        const sevInput = document.getElementById('severityInput');
+        const sevMap = { "1": "Low", "2": "Medium", "3": "High", "4": "Critical" };
+        sevRange.addEventListener('input', (e) => { sevInput.value = sevMap[e.target.value]; });
+
+        // Withholding the figure must not cost the researcher the credit. A disabled
+        // input is left out of FormData entirely, so the server stores NULL rather
+        // than a zero it would otherwise count as "paid nothing".
+        const bountyInput = document.getElementById('awardedBounty');
+        const bountyField = document.getElementById('bountyField');
+        const bountyHint = document.getElementById('bountyHint');
+        document.getElementById('hideBounty').addEventListener('change', (e) => {
+            const hidden = e.target.checked;
+            bountyInput.disabled = hidden;
+            bountyInput.required = !hidden;
+            if (hidden) bountyInput.value = '';
+            bountyField.classList.toggle('hidden', hidden);
+            bountyHint.textContent = hidden
+                ? 'The credit will be published with the amount withheld.'
+                : 'Enter 0 if there was no payout: handling a report well and paying for it are two different credits.';
+        });
+
+        document.getElementById('submission_date').addEventListener('change', renderElapsed);
+        document.getElementById('resolution_date').addEventListener('change', renderElapsed);
+        form.querySelectorAll('input[name="highlight_type"]').forEach(el => el.addEventListener('change', renderElapsed));
+
+        async function loadCompanies() {
+            try {
+                const res = await fetch('/api/companies');
+                const companies = await res.json();
+                const datalist = document.getElementById('companies-list');
+                datalist.innerHTML = companies.map(c => `<option value="${c}"></option>`).join('');
+            } catch (e) { console.error(e); }
+        }
+        loadCompanies();
+
+        const platformMap = {
+            'Web / API': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Immunefi', 'HackenProof', 'Independent', 'Other'],
+            'Mobile App': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Immunefi', 'HackenProof', 'Independent', 'Other'],
+            'Hardware / IoT': ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack', 'Synack', 'Independent', 'Other'],
+            'Smart Contract / Blockchain': ['Immunefi', 'Code4rena', 'Sherlock', 'Cantina', 'CodeHawks', 'Salus', 'HackenProof', 'Independent', 'Other']
+        };
+
+        const categorySelect = form.querySelector('select[name="bounty_category"]');
+        const platformInput = form.querySelector('input[name="platform"]');
+        const platformsList = document.getElementById('platforms-list');
+
+        categorySelect.addEventListener('change', (e) => {
+            const valid = platformMap[e.target.value] || [];
+            platformsList.innerHTML = valid.map(p => `<option value="${p}"></option>`).join('');
+            if (platformInput.value && !valid.includes(platformInput.value)) platformInput.value = '';
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cat = categorySelect.value;
+            const plat = platformInput.value;
+            if (cat && platformMap[cat] && !platformMap[cat].includes(plat)) {
+                alert('Invalid platform for the selected category. Please select a valid combination.');
+                return;
+            }
+
+            const result = checkTimeline();
+            if (result.error) {
+                alert('Error: ' + result.error);
+                return;
+            }
+
+            const btn = submitBtn;
+            btn.disabled = true;
+            btn.innerText = 'Verifying PoW...';
+
+            try {
+                const formData = new FormData(form);
+
+                const resChallenge = await fetch('/api/pow-challenge');
+                const { challenge, difficulty } = await resChallenge.json();
+
+                let nonce = 0;
+                const prefix = '0'.repeat(difficulty);
+
+                const computeBatch = async () => {
+                    for (let i = 0; i < 20000; i++) {
+                        const hashHex = CryptoJS.SHA256(challenge + nonce).toString(CryptoJS.enc.Hex);
+                        if (hashHex.startsWith(prefix)) return nonce;
+                        nonce++;
+                    }
+                    return new Promise(resolve => setTimeout(() => resolve(computeBatch()), 0));
+                };
+
+                btn.innerText = 'Calculating Proof of Work...';
+                const foundNonce = await computeBatch();
+
+                btn.innerText = 'Submitting...';
+                formData.append('pow_challenge', challenge);
+                formData.append('pow_nonce', foundNonce);
+
+                const resSubmit = await fetch('/api/kudos', { method: 'POST', body: formData });
+
+                if (resSubmit.ok) {
+                    const progress = document.getElementById('progressBar');
+                    progress.style.width = '100%';
+
+                    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+                    document.getElementById('wizardHeader').style.display = 'none';
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'none';
+                    document.getElementById('step5').classList.add('active');
+                    if (window.trackEvent) window.trackEvent('kudos_submitted', selectedHighlight());
+                } else {
+                    const err = await resSubmit.json();
+                    alert('Error: ' + (err.error || 'Submission failed'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred: ' + err.message + '. Please check the console or ensure your adblocker isn\'t blocking required scripts.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Record Credit';
+            }
+        });
+    </script>
+
+    <footer class="border-t border-gray-200 bg-white py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">SLAScan &copy; 2026. Community Driven.</p>
+            <div class="mt-2 flex justify-center items-center gap-4">
+                <a href="about.html#legal" class="text-xs text-gray-400 hover:text-gray-600">Privacy Policy &amp; Terms</a>
+                <span class="text-gray-300">|</span>
+                <a href="index.html" class="text-xs text-gray-400 hover:text-gray-600">Breach ledger</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Granular Analytics & Privacy-first Telemetry -->
+    <script>
+        function getOrSetId(storage, key) {
+            let id = storage.getItem(key);
+            if (!id) {
+                id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+                storage.setItem(key, id);
+            }
+            return id;
+        }
+
+        const deviceId = getOrSetId(localStorage, 'slascan_did');
+        const sessionId = getOrSetId(sessionStorage, 'slascan_sid');
+
+        fetch('/api/ping', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname || '/', device_id: deviceId, session_id: sessionId })
+        }).catch(e => {});
+
+        function trackEvent(actionType, actionDetail = null) {
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action_type: actionType, action_detail: actionDetail, device_id: deviceId, session_id: sessionId })
+            }).catch(e => {});
+        }
+        window.trackEvent = trackEvent;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const shareBtn = document.getElementById('shareNewPraiseBtn');
+            if (shareBtn) shareBtn.addEventListener('click', () => trackEvent('share_x', 'new_praise_success'));
+        });
+    </script>
+</body>
+</html>

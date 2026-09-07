@@ -239,8 +239,15 @@ app.get('/api/ledger', (req, res) => {
 });
 
 // Endpoint pour récupérer la liste unique des entreprises (Autocomplétion crowdsourcée)
+// Union des deux registres: une entité déjà citée pour un manquement doit être
+// proposée telle quelle à qui vient saluer son redressement, et inversement.
+// Sans cela les deux formulaires créent deux orthographes de la même entreprise.
 app.get('/api/companies', (req, res) => {
-    db.all(`SELECT DISTINCT company_name FROM reports WHERE is_hidden = 0 AND company_name IS NOT NULL ORDER BY company_name ASC`, (err, rows) => {
+    db.all(`SELECT DISTINCT company_name FROM (
+                SELECT company_name FROM reports WHERE is_hidden = 0 AND company_name IS NOT NULL
+                UNION
+                SELECT company_name FROM kudos WHERE is_hidden = 0 AND company_name IS NOT NULL
+            ) ORDER BY company_name ASC`, (err, rows) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         // Retourne un tableau de chaînes de caractères
         res.json(rows.map(row => row.company_name));
@@ -268,6 +275,11 @@ app.get('/api/leaderboard', (req, res) => {
         });
     });
 });
+
+
+// Wall of Fame: le registre inverse. Mêmes axes, même coût PoW, mêmes garde-fous.
+// Monté ici pour hériter de `upload`, `escapeHTML` et du rate limiter /api/.
+require('./kudos')({ app, db, crypto, uuidv4, upload, escapeHTML });
 
 
 // Endpoint pour signaler un rapport (Downvote) avec PoW

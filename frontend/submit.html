@@ -170,13 +170,21 @@
                 
                 <div class="mt-8 border-t border-gray-100 pt-8">
                     <label class="block text-sm font-medium text-gray-600 mb-2">7. Expected Bounty</label>
-                    <div class="relative max-w-md">
+                    <div id="bountyField" class="relative max-w-md">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <span class="text-gray-500 font-medium">$</span>
                         </div>
-                        <input type="number" name="expected_bounty" placeholder="5000" min="0" required class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
+                        <input type="number" id="expectedBounty" name="expected_bounty" placeholder="5000" min="0" required class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-8 pr-4 text-sm text-gray-900 focus:outline-none focus:border-alertOrange focus:ring-1 focus:ring-alertOrange shadow-sm">
                     </div>
-                    <p class="text-xs text-gray-400 mt-2">How much were you expecting? This must be filled.</p>
+                    <p id="bountyHint" class="text-xs text-gray-400 mt-2">How much were you expecting?</p>
+
+                    <label class="mt-4 flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition max-w-md">
+                        <input type="checkbox" id="hideBounty" class="mt-0.5 w-4 h-4 rounded text-gray-900 focus:ring-gray-900 border-gray-300">
+                        <span class="text-sm text-gray-700">
+                            <strong class="font-semibold">Do not disclose the amount</strong>
+                            <span class="block text-xs text-gray-500 mt-0.5">A figure can identify the report, and the report can identify you. The breach is recorded either way; only the figure is withheld.</span>
+                        </span>
+                    </label>
                 </div>
             </div>
 
@@ -343,6 +351,23 @@
             }
         });
 
+
+        // Withholding the figure must not cost the researcher the report. A disabled
+        // input is left out of FormData entirely, so the server stores NULL rather
+        // than a zero it would otherwise read as "expected nothing".
+        const bountyInput = document.getElementById('expectedBounty');
+        const bountyField = document.getElementById('bountyField');
+        const bountyHint = document.getElementById('bountyHint');
+        document.getElementById('hideBounty').addEventListener('change', (e) => {
+            const hidden = e.target.checked;
+            bountyInput.disabled = hidden;
+            bountyInput.required = !hidden;
+            if (hidden) bountyInput.value = '';
+            bountyField.classList.toggle('hidden', hidden);
+            bountyHint.textContent = hidden
+                ? 'The report will be published with the amount withheld.'
+                : 'How much were you expecting?';
+        });
 
         // Populate companies list
         async function loadCompanies() {
