@@ -54,8 +54,13 @@ function parseDay(value) {
 // Runs the gate on one submission and returns either { error } or { elapsed_days }.
 // Exported so the rules can be tested without an HTTP server in front of them.
 function gradeSubmission({ highlight_type, submission_date, resolution_date, now }) {
-    const rule = HIGHLIGHT_RULES[highlight_type];
-    if (!rule) return { error: 'Type de retour inconnu.' };
+    // highlight_type could be an array or a comma-separated string
+    let types = [];
+    if (Array.isArray(highlight_type)) types = highlight_type;
+    else if (typeof highlight_type === 'string') types = highlight_type.split(',').map(s => s.trim());
+    else return { error: 'Invalid highlight type format.' };
+
+    if (types.length === 0) return { error: 'Type de retour inconnu.' };
 
     const submitted = parseDay(submission_date);
     const resolved = parseDay(resolution_date);
@@ -72,11 +77,17 @@ function gradeSubmission({ highlight_type, submission_date, resolution_date, now
     }
 
     const elapsed_days = Math.floor((resolved.getTime() - submitted.getTime()) / MS_PER_DAY);
-    if (rule.maxDays !== null && elapsed_days > rule.maxDays) {
-        return { error: rule.error };
+
+    // Validate ALL selected rules
+    for (const type of types) {
+        const rule = HIGHLIGHT_RULES[type];
+        if (!rule) return { error: `Type de retour inconnu: ${type}` };
+        if (rule.maxDays !== null && elapsed_days > rule.maxDays) {
+            return { error: rule.error };
+        }
     }
 
-    return { elapsed_days };
+    return { elapsed_days, valid_types: types.join(', ') };
 }
 
 function registerKudosRoutes({ app, db, crypto, uuidv4, upload, escapeHTML }) {

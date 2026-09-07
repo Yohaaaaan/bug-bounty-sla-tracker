@@ -352,7 +352,7 @@ app.get('/api/admin/analytics', (req, res) => {
             SUM(CASE WHEN created_at >= datetime('now', '-7 days') THEN 1 ELSE 0 END) as views_this_week,
             COUNT(DISTINCT CASE WHEN created_at >= datetime('now', '-7 days') THEN visitor_hash END) as unique_this_week,
             COUNT(DISTINCT CASE WHEN created_at >= datetime('now', 'start of day') THEN visitor_hash END) as unique_today
-        FROM analytics 
+        FROM analytics WHERE path NOT LIKE '%praise.html%' 
         GROUP BY CASE WHEN path = '/index.html' THEN '/' ELSE path END 
         ORDER BY views DESC
     `, [], (err, rows) => {

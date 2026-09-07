@@ -302,6 +302,7 @@
 
         window.setMode = function(selectedMode) {
             mode = selectedMode;
+            if (window.trackEvent) window.trackEvent('form_mode_selected', mode);
             
             if (mode === 'breach') {
                 progressBar.className = 'h-full bg-gradient-to-r from-alertOrange to-red-500 transition-all duration-300';
@@ -623,6 +624,7 @@
                     
                     document.getElementById('step4').classList.remove('active'); // Just in case
                     document.getElementById('step5').classList.add('active');
+                    if (window.trackEvent) window.trackEvent('form_submitted_success', mode);
                     
                 } else {
 
